@@ -1,0 +1,3 @@
+[submodule "robdef"]
+	path = robdef
+	url = git@github.com:robotraconteur/robotraconteur_standard_robdef.git
