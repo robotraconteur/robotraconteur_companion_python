@@ -19,7 +19,6 @@ setup(
         'RobotRaconteur',
         'numpy',
         'PyYAML',
-        'appdirs',
         'setuptools'
     ],
     tests_require=['pytest'],
