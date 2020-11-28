@@ -1,5 +1,5 @@
 import RobotRaconteur as RR
-from RobotRaconteurCompanion.InfoParser.InfoParser import InfoParser
+from RobotRaconteurCompanion import InfoParser
 import RobotRaconteurCompanion as RRC
 import pkg_resources
 
