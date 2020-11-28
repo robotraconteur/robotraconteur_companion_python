@@ -1,13 +1,19 @@
 
 import os
 import ctypes
-import msvcrt
 from pathlib import Path
 import re
 import sys
 import RobotRaconteur as RR
 import uuid
 import numpy as np
+import stat
+import errno
+
+if sys.platform == 'win32':
+    import msvcrt
+else:
+    import fcntl
 
 def _get_user_data_path():
     if sys.platform == 'win32':
@@ -17,7 +23,11 @@ def _get_user_data_path():
         p.mkdir(parents = True, exist_ok = True)
         return p
     else:
-        assert False, "Not implemented!"
+        path1 = os.environ["HOME"]
+        assert path1 is not None, "Home directory not set"
+        p = Path(path1).joinpath(".config").joinpath("RobotRaconteur")
+        p.mkdir(parents = True, exist_ok = True)
+        return p
 
 def _get_user_run_path():
     if sys.platform == 'win32':
@@ -26,8 +36,34 @@ def _get_user_run_path():
         p = Path(buf.value).joinpath("RobotRaconteur").joinpath("run")
         p.mkdir(parents = True, exist_ok = True)
         return p
+    elif sys.platform == 'darwin':
+        u = os.getuid()
+        if u == 0:
+            path = Path("/var/run/robotraconteur/root")
+            path.mkdir(parents = True, exist_ok = True)
+            path.chmod(stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+        else:
+            path1 = os.environ["TMPDIR"]
+            assert path1 is not None, "Could not activate system for local identifier manager"
+            path = Path(path1).parent.joinpath("C")
+            assert path.is_dir(), "Could not activate system for local identifier manager"
+            path = path.joinpath("robotraconteur")
+        path.mkdir(parents = True, exist_ok = True)
+        return path
     else:
-        assert False, "Not implemented!"
+        u = os.getuid()
+        if u == 0:
+            path = Path("/var/run/robotraconteur/root")
+            path.mkdir(parents = True, exist_ok = True)
+            path.chmod(stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+        else:
+            path1 = os.environ["XDG_RUNTIME_DIR"]
+            assert path1 is not None, "Could not activate system for local identifier manager"
+            path = Path(path1)
+            assert path.is_dir(), "Could not activate system for local identifier manager"
+            path = path.joinpath("robotraconteur")
+        path.mkdir(parents = True, exist_ok = True)
+        return path
 
 def _get_user_identifier_path():
     p = _get_user_data_path().joinpath("identifiers")
@@ -48,7 +84,11 @@ def _open_lock_write(file_path):
         f = os.fdopen(fd, "r+",encoding="ascii")
         return f
     else:
-        assert False, "Not implemented!"
+        fd1 = os.open(str(file_path),os.O_CLOEXEC | os.O_RDWR | os.O_APPEND | os.O_CREAT, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP)        
+        f = os.fdopen(fd1, "r+",encoding="ascii")
+        fcntl.lockf(f,fcntl.LOCK_EX)
+        return f
+        
 
 class LocalIdentifiersManager(object):
 
@@ -65,7 +105,25 @@ class LocalIdentifiersManager(object):
         p1.mkdir(parents = True, exist_ok = True)
         p = p1.joinpath(name)
 
-        f = _open_lock_write(p)
+        if sys.platform == "win32":
+            f = _open_lock_write(p)
+        else:
+            p_lock1 = _get_user_run_path().joinpath("identifiers").joinpath(category)
+            p_lock1.mkdir(parents = True, exist_ok = True)
+            p_lock = p_lock1.joinpath(name + ".pid")
+            f_run = _open_lock_write(p_lock)
+            f_run.seek(0,0)
+            f_run.truncate()
+            f_run.write(str(os.getpid()))
+
+            try:
+                f = _open_lock_write(p)
+            except OSError as x:
+                if x.errno == errno.EROFS:
+                    f = open(p,'r',encoding="ascii")
+                else:
+                    raise
+
         f.seek(0,0)
         f_text = f.read()
         if len(f_text) == 0:
@@ -80,5 +138,8 @@ class LocalIdentifiersManager(object):
         ret.name = name
         ret.uuid = np.zeros((1,),dtype=uuid_dtype)
         ret.uuid["uuid_bytes"] = np.frombuffer(ident_uuid.bytes,dtype=np.uint8)
-
-        return ret,f
+        if sys.platform == "win32":
+            return ret,f
+        else:
+            f.close()
+            return ret,f_run

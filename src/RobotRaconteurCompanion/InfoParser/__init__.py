@@ -214,8 +214,7 @@ class InfoParser(object):
             raise RR.InvalidArgumentException("Invalid structure type specified")
         
         d = yaml.safe_load(info_string)
-        print(d)
-
+        
         ret = self._parse_structure(d,struct_type,struct_def)
         return ret
 
