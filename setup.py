@@ -11,8 +11,7 @@ setup(
     packages=find_namespace_packages(where='src'),
     include_package_data=True,
     zip_safe=False,
-    package_data={'RobotRaconteurCompanion': [
-        'robdef/group1/*.robdef',
+    package_data={'RobotRaconteurCompanion.StdRobDef': [
         '*.robdef'
     ]},
     install_requires=[
