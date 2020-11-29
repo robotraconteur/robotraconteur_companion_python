@@ -21,7 +21,7 @@ class InfoParser(object):
 
     def _find_namedarray(self, n):
         try:
-            dtype = self.node.GetNamedArrayDType(n)
+            dtype = self.node.GetNamedArrayDType(n,self.client_obj)
         except:
             return None, None
         service_name, n1 = SplitQualifiedName(n)
@@ -31,7 +31,7 @@ class InfoParser(object):
 
     def _find_structure(self, s):
         try:
-            stype = self.node.GetStructureType(s)
+            stype = self.node.GetStructureType(s,self.client_obj)
         except:
             return None, None
         service_name, s1 = SplitQualifiedName(s)
