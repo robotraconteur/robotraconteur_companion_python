@@ -17,7 +17,7 @@ class DateTimeUtil(object):
         self._datetimelocal = node.GetStructureType("com.robotraconteur.datetime.DateTimeLocal", self._client_obj)
         self._timespec2_dt = node.GetPodDType("com.robotraconteur.datetime.TimeSpec2", self._client_obj)
         self._timespec3_dt = node.GetNamedArrayDType("com.robotraconteur.datetime.TimeSpec3", self._client_obj)
-        self._devicetime = node.GetStructureType("com.robotraconteur.device.clock.DeviceTime", self._client_obj)
+        self._devicetime_dt = node.GetPodDType("com.robotraconteur.device.clock.DeviceTime", self._client_obj)
 
         self._datetime_const = node.GetConstants("com.robotraconteur.datetime")
         self._clock_codes = self._datetime_const["ClockTypeCode"]
@@ -50,8 +50,8 @@ class DateTimeUtil(object):
         return ret
 
     def FillDeviceTime(self, device_info, seqno):
-        ret = self._devicetime()
-        ret.device_seqno = seqno
-        ret.device_ts = self.TimeSpec2Now(device_info)
-        ret.device_utc = self.UtcNow(device_info)
+        ret = np.zeros((1,),self._devicetime_dt)
+        ret[0]["device_seqno"] = seqno
+        ret[0]["device_ts"] = self.TimeSpec2Now(device_info)
+        ret[0]["device_utc"] = self.UtcNow(device_info)
         return ret

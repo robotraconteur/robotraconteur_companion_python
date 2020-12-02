@@ -193,12 +193,12 @@ class InfoParser(object):
         namedarray_type_name = service_def.Name + "." + namedarray_def.Name
         n_override = "_override_namedarray_" + namedarray_type_name.replace(".","__")
         if hasattr(self,n_override):
-            return True,getattr(self,n_override)(d,f_type,namedarray_dtype,namedarray_def)
+            return getattr(self,n_override)(d,f_type,namedarray_dtype,namedarray_def)
         if f_type.ArrayType == RR.DataTypes_ArrayTypes_none:
             arr = np.zeros((1,),dtype=namedarray_dtype)
             self._parse_namedarray_el(d,arr,0,namedarray_dtype)
             return arr
-        return False,None
+        return None
 
     def ParseInfoFile(self, filename, type_name):
         struct_type = self._find_structure(type_name)
@@ -257,5 +257,5 @@ class InfoParser(object):
     def _override_field_com__robotraconteur__imaging__camerainfo__CameraCalibration__distortion_info(self,d,f_type,service_def):
         s_type,s_def = self._find_structure('com.robotraconteur.imaging.camerainfo.PlumbBobDistortionInfo')
         assert s_type is not None
-        return self._parse_structure(d,s_type,s_def)        
+        return RR.VarValue(self._parse_structure(d,s_type,s_def),'com.robotraconteur.imaging.camerainfo.PlumbBobDistortionInfo')
         
