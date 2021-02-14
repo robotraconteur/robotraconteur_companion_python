@@ -1,16 +1,14 @@
 import RobotRaconteur as RR
 from RobotRaconteurCompanion import InfoParser
 import RobotRaconteurCompanion as RRC
-import pkg_resources
-
-resource_package = __name__
+import importlib_resources
 
 def test_infoparser():
     node = RR.RobotRaconteurNode()
     node.Init()
     try:
         RRC.RegisterStdRobDefServiceTypes(node)
-        info_text = pkg_resources.resource_string(resource_package, 'sawyer_robot_default_config.yml').decode('utf-8')
+        info_text = importlib_resources.read_text(__package__, 'sawyer_robot_default_config.yml')
         parser = InfoParser(node)
         robot_info = parser.ParseInfoString(info_text,"com.robotraconteur.robotics.robot.RobotInfo")
         print(robot_info)

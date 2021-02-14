@@ -18,7 +18,8 @@ setup(
         'RobotRaconteur',
         'numpy',
         'PyYAML',
-        'setuptools'
+        'setuptools',
+        'importlib_resources'
     ],
     tests_require=['pytest'],
     extras_require={

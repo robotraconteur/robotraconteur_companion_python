@@ -50,10 +50,9 @@ STANDARD_ROBDEF_NAMES = [
 STANDARD_ROBDEF_TEXT={}
 
 def _load_standard_robdef_text():
-    import pkg_resources
-    resource_package = __name__
+    import importlib_resources
     for n in STANDARD_ROBDEF_NAMES:
-        robdef_text = pkg_resources.resource_string(resource_package, n + '.robdef').decode('utf-8')
+        robdef_text = importlib_resources.read_text(__package__, n + '.robdef')
         STANDARD_ROBDEF_TEXT[n] = robdef_text
 
 _load_standard_robdef_text()
