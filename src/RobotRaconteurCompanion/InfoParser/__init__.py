@@ -224,7 +224,7 @@ class InfoParser(object):
         enum_def = _find_by_name(service_def.Enums,"RobotCapabilities")
         return self._flags_override(d,enum_def)
     
-    def _override_field_com__robotraconteur__robotics__robot__ToolInfo__tool_capabilities(self, d, f_type, service_def):
+    def _override_field_com__robotraconteur__robotics__tool__ToolInfo__tool_capabilities(self, d, f_type, service_def):
         enum_def = _find_by_name(service_def.Enums,"ToolCapabilities")
         return self._flags_override(d,enum_def)
 
