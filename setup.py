@@ -2,7 +2,7 @@ from setuptools import setup, find_packages, find_namespace_packages
 
 setup(
     name='RobotRaconteurCompanion',
-    version='0.1.1',
+    version='0.1.2',
     description='Robot Raconteur Python Companion Library',
     author='John Wason',
     author_email='wason@wasontech.com',
