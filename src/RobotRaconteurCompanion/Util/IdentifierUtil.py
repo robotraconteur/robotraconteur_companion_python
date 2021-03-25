@@ -14,8 +14,8 @@ class IdentifierUtil(object):
             self._node = node
         self._client_obj = client_obj
 
-        self._identifier = node.GetStructureType("com.robotraconteur.identifier.Identifier", self._client_obj)
-        self._uuid_dt = node.GetNamedArrayDType("com.robotraconteur.uuid.UUID", self._client_obj)
+        self._identifier = self._node.GetStructureType("com.robotraconteur.identifier.Identifier", self._client_obj)
+        self._uuid_dt = self._node.GetNamedArrayDType("com.robotraconteur.uuid.UUID", self._client_obj)
 
         self._uuid_util = UuidUtil(node,client_obj)
 

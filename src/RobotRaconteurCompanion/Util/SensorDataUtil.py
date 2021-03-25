@@ -13,9 +13,9 @@ class SensorDataUtil(object):
             self._node = node
         self._client_obj = client_obj
 
-        self._sensordataheader = node.GetStructureType("com.robotraconteur.sensordata.SensorDataHeader", self._client_obj)
-        self._sourceinfo = node.GetStructureType("com.robotraconteur.sensordata.SensorDataSourceInfo", self._client_obj)
-        self._pose_dt = node.GetNamedArrayDType("com.robotraconteur.geometry.Pose")
+        self._sensordataheader = self._node.GetStructureType("com.robotraconteur.sensordata.SensorDataHeader", self._client_obj)
+        self._sourceinfo = self._node.GetStructureType("com.robotraconteur.sensordata.SensorDataSourceInfo", self._client_obj)
+        self._pose_dt = self._node.GetNamedArrayDType("com.robotraconteur.geometry.Pose")
         
         self._datetime_util = DateTimeUtil(node,client_obj)
 

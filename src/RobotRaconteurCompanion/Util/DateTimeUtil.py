@@ -13,13 +13,13 @@ class DateTimeUtil(object):
             self._node = node
         self._client_obj = client_obj
 
-        self._datetimeutc_dt = node.GetPodDType("com.robotraconteur.datetime.DateTimeUTC", self._client_obj)
-        self._datetimelocal = node.GetStructureType("com.robotraconteur.datetime.DateTimeLocal", self._client_obj)
-        self._timespec2_dt = node.GetPodDType("com.robotraconteur.datetime.TimeSpec2", self._client_obj)
-        self._timespec3_dt = node.GetNamedArrayDType("com.robotraconteur.datetime.TimeSpec3", self._client_obj)
-        self._devicetime_dt = node.GetPodDType("com.robotraconteur.device.clock.DeviceTime", self._client_obj)
+        self._datetimeutc_dt = self._node.GetPodDType("com.robotraconteur.datetime.DateTimeUTC", self._client_obj)
+        self._datetimelocal = self._node.GetStructureType("com.robotraconteur.datetime.DateTimeLocal", self._client_obj)
+        self._timespec2_dt = self._node.GetPodDType("com.robotraconteur.datetime.TimeSpec2", self._client_obj)
+        self._timespec3_dt = self._node.GetNamedArrayDType("com.robotraconteur.datetime.TimeSpec3", self._client_obj)
+        self._devicetime_dt = self._node.GetPodDType("com.robotraconteur.device.clock.DeviceTime", self._client_obj)
 
-        self._datetime_const = node.GetConstants("com.robotraconteur.datetime")
+        self._datetime_const = self._node.GetConstants("com.robotraconteur.datetime")
         self._clock_codes = self._datetime_const["ClockTypeCode"]
 
     def UtcNow(self, device_info = None):        

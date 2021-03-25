@@ -12,7 +12,7 @@ class UuidUtil(object):
             self._node = node
         self._client_obj = client_obj
         
-        self._uuid_dt = node.GetNamedArrayDType("com.robotraconteur.uuid.UUID", self._client_obj)
+        self._uuid_dt = self._node.GetNamedArrayDType("com.robotraconteur.uuid.UUID", self._client_obj)
 
     def UuidFromPyUuid(self, py_uuid):
         ret_bytes = np.frombuffer(py_uuid.bytes,dtype=np.uint8)
