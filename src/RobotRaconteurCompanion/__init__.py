@@ -1,4 +1,13 @@
 from __future__ import absolute_import
 
-from .StdRobDef import RegisterStdRobDefServiceTypes
-from .InfoParser import InfoParser
+try:
+    from .StdRobDef import RegisterStdRobDefServiceTypes
+except:
+    import warnings
+    warnings.warn("Could not initialize RobotRaconteurCompanion.StdRobDef")
+
+try:
+    from .InfoParser import InfoParser
+except:
+    import warnings
+    warnings.warn("Could not initialize RobotRaconteurCompanion.InfoParser")
