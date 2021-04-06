@@ -60,7 +60,44 @@ enum SensorTypeCode
     light_intensity,
     object_color,
     altitude,
-    other
+    generic_word,
+    generic_vector,
+    position,
+    angle,
+    acceleration,
+    angular_acceleration,
+    inclinometer,
+    tilt,
+    motion,
+    radiation,
+    photoelectric,
+    leak,
+    chemical,
+    particle,
+    metal,
+    smoke,
+    flame,
+    vibration,
+    mark,
+    contamination,
+    inertial,
+    magnetometer,
+    navigation,
+    tactile,
+    meteorological,
+    horizon,
+    sun,
+    star,
+    moon,
+    attitude,
+    airspeed,
+    distance,
+    heading,
+    safety,
+    door,
+    security,
+    other=0x8000,
+    vendor_defined=0x80000
 end
 
 enum SensorDataFlags
@@ -74,7 +111,8 @@ enum SensorDataFlags
     out_of_range_low = 0x40,
     warning = 0x80,
     error = 0x100,
-    fatal_error = 0x200
+    fatal_error = 0x200,
+    ready = 0x400
 end
 
 struct SensorInfo
@@ -91,7 +129,7 @@ end
 
 struct SensorData
     field SensorDataHeader data_header
-    field int32 data_flags
+    field uint32 data_flags
     field double[] data
     field DataType data_type
     field SIUnit{list} data_units
@@ -102,7 +140,6 @@ end
 object Sensor
     implements Device
     property DeviceInfo device_info [readonly,nolock]
-    property bool active
     property SensorInfo sensor_info [readonly,nolock]
     wire double[] sensor_value [readonly,nolock]
     pipe SensorData sensor_data [readonly,nolock]
@@ -114,7 +151,6 @@ object Vector2Sensor
     implements Device
     implements Sensor
     property DeviceInfo device_info [readonly,nolock]
-    property bool active
     property SensorInfo sensor_info [readonly,nolock]
     wire double[] sensor_value [readonly,nolock]
     pipe SensorData sensor_data [readonly,nolock]
@@ -127,7 +163,6 @@ object Vector3Sensor
     implements Sensor
     implements Device
     property DeviceInfo device_info [readonly,nolock]
-    property bool active
     property SensorInfo sensor_info [readonly,nolock]
     wire double[] sensor_value [readonly,nolock]
     pipe SensorData sensor_data [readonly,nolock]
@@ -140,7 +175,6 @@ object Vector6Sensor
     implements Sensor
     implements Device
     property DeviceInfo device_info [readonly,nolock]
-    property bool active
     property SensorInfo sensor_info [readonly,nolock]
     wire double[] sensor_value [readonly,nolock]
     pipe SensorData sensor_data [readonly,nolock]
@@ -153,7 +187,6 @@ object WrenchSensor
     implements Sensor
     implements Device
     property DeviceInfo device_info [readonly,nolock]
-    property bool active
     property SensorInfo sensor_info [readonly,nolock]
     wire double[] sensor_value [readonly,nolock]
     pipe SensorData sensor_data [readonly,nolock]
@@ -166,7 +199,6 @@ object FreeformSensor
     implements Sensor
     implements Device
     property DeviceInfo device_info [readonly,nolock]
-    property bool active
     property SensorInfo sensor_info [readonly,nolock]
     wire double[] sensor_value [readonly,nolock]
     pipe SensorData sensor_data [readonly,nolock]
