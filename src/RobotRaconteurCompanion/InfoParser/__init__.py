@@ -198,6 +198,12 @@ class InfoParser(object):
             arr = np.zeros((1,),dtype=namedarray_dtype)
             self._parse_namedarray_el(d,arr,0,namedarray_dtype)
             return arr
+        if f_type.ArrayType == RR.DataTypes_ArrayTypes_array:
+            n = len(d)
+            arr = np.zeros((n,),dtype=namedarray_dtype)
+            for i in range(n):
+                self._parse_namedarray_el(d[i],arr,i,namedarray_dtype)
+            return arr
         return None
 
     def ParseInfoFile(self, filename, type_name):
