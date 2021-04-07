@@ -2,7 +2,7 @@ from setuptools import setup, find_packages, find_namespace_packages
 
 setup(
     name='RobotRaconteurCompanion',
-    version='0.1.5',
+    version='0.1.6',
     description='Robot Raconteur Python Companion Library',
     author='John Wason',
     author_email='wason@wasontech.com',
@@ -19,7 +19,8 @@ setup(
         'numpy',
         'PyYAML',
         'setuptools',
-        'importlib_resources'
+        'importlib_resources',
+        'general_robotics_toolbox'
     ],
     tests_require=['pytest'],
     extras_require={
