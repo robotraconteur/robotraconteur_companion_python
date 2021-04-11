@@ -43,7 +43,7 @@ class RobotUtil:
             H[2, i] = chain.H[i]["z"]
 
         P = np.zeros((3, joint_count + 1),dtype=np.float64)
-        for i in range(joint_count):
+        for i in range(joint_count+1):
             P[0, i] = chain.P[i]["x"]
             P[1, i] = chain.P[i]["y"]
             P[2, i] = chain.P[i]["z"]
