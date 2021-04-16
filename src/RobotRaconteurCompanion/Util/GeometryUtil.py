@@ -36,31 +36,64 @@ class GeometryUtil(object):
         self._ident_util = IdentifierUtil(self._node, self._client_obj)
 
     def _create_dtypes(self, type_name):
-        return self._node.GetNamedArrayDType(f"com.robotraconteur.geometry.{type_name}"), \
-                self._node.GetNamedArrayDType(f"com.robotraconteur.geometryf.{type_name}"), \
-                self._node.GetNamedArrayDType(f"com.robotraconteur.geometryi.{type_name}")
+        try:
+            d_type = self._node.GetNamedArrayDType(f"com.robotraconteur.geometry.{type_name}",self._client_obj)
+        except:
+            d_type = None
+        try:
+            f_type = self._node.GetNamedArrayDType(f"com.robotraconteur.geometryf.{type_name}",self._client_obj)
+        except:
+            f_type = None
+        try:
+            i_type = self._node.GetNamedArrayDType(f"com.robotraconteur.geometryi.{type_name}",self._client_obj)
+        except:
+            i_type = None
+
+        assert any((d_type, f_type, i_type)), "No geometry service types registered"
+        return d_type, f_type, i_type
+
+
+
 
     def _create_structtypes(self, type_name):
-        return self._node.GetStructureType(f"com.robotraconteur.geometry.{type_name}"), \
-                self._node.GetStructureType(f"com.robotraconteur.geometryf.{type_name}"), \
-                self._node.GetStructureType(f"com.robotraconteur.geometryi.{type_name}")
+        try:
+            d_type = self._node.GetStructureType(f"com.robotraconteur.geometry.{type_name}",self._client_obj)
+        except:
+            d_type = None
+        try:
+            f_type = self._node.GetStructureType(f"com.robotraconteur.geometryf.{type_name}",self._client_obj)
+        except:
+            f_type = None
+        try:
+            i_type = self._node.GetStructureType(f"com.robotraconteur.geometryi.{type_name}",self._client_obj)
+        except:
+            i_type = None
+        
+        assert any((d_type, f_type, i_type)), "No geometry service types registered"
+        return d_type, f_type, i_type
 
     def _create_return_np(self, rr_dtypes, dtype):
         if dtype == np.float64:
+            assert rr_dtypes[0], "com.robotraconteur.geometry not registered"
             return np.zeros((1,),dtype=rr_dtypes[0])
         elif dtype == np.float32:
+            assert rr_dtypes[1], "com.robotraconteur.geometryf not registered"
             return np.zeros((1,),dtype=rr_dtypes[1])
         elif dtype == np.int32:
+            assert rr_dtypes[2], "com.robotraconteur.geometryi not registered"
             return np.zeros((1,),dtype=rr_dtypes[2])
         else:
             assert False, "Invalid dtype"
 
     def _create_return_struct(self, rr_struct_types, dtype):
         if dtype == np.float64:
+            assert rr_struct_types[0], "com.robotraconteur.geometry not registered"
             return rr_struct_types[0]()
         elif dtype == np.float32:
+            assert rr_struct_types[1], "com.robotraconteur.geometryf not registered"
             return rr_struct_types[1]()
         elif dtype == np.int32:
+            assert rr_struct_types[2], "com.robotraconteur.geometryi not registered"
             return rr_struct_types[2]()
         else:
             assert False, "Invalid dtype"
