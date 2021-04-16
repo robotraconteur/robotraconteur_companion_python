@@ -78,6 +78,7 @@ class ImageUtil(object):
             assert arr.shape[2] == 3
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["bgr888"]
+            rr_image.image_info.step = rr_image.image_info.width * 3
             rr_image.data = arr.flatten(order="C")
             return rr_image
 
@@ -85,6 +86,7 @@ class ImageUtil(object):
             assert arr.shape[2] == 3
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["rgb888"]
+            rr_image.image_info.step = rr_image.image_info.width * 3
             rr_image.data = arr.flatten(order="C")
             rr_image.data[0::3] = arr[...,2].flatten(order="C")
             rr_image.data[2::3] = arr[...,0].flatten(order="C")
@@ -94,6 +96,7 @@ class ImageUtil(object):
             assert arr.shape[2] == 4
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["bgra8888"]
+            rr_image.image_info.step = rr_image.image_info.width * 4
             rr_image.data = arr.flatten(order="C")
             return rr_image
 
@@ -101,6 +104,7 @@ class ImageUtil(object):
             assert arr.shape[2] == 4
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["rgba8888"]
+            rr_image.image_info.step = rr_image.image_info.width * 4
             rr_image.data = np.zeros((arr.size,),dtype=np.uint8)
             rr_image.data[0::4] = arr[...,2].flatten(order="C")
             rr_image.data[1::4] = arr[...,1].flatten(order="C")
@@ -112,6 +116,7 @@ class ImageUtil(object):
             assert arr.ndim ==2 or arr.shape[2] == 1
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["mono8"]
+            rr_image.image_info.step = rr_image.image_info.width
             rr_image.data = arr.flatten(order="C")
             return rr_image
 
@@ -120,6 +125,7 @@ class ImageUtil(object):
             assert arr.dtype == np.uint16
             assert sys.byteorder == "little"
             rr_image.image_info.encoding = encodings[encoding]
+            rr_image.image_info.step = rr_image.image_info.width * 2
             rr_image.data = arr.flatten(order="C").view(dtype=np.uint8).copy()
             return rr_image
 
@@ -128,6 +134,7 @@ class ImageUtil(object):
             assert arr.dtype == np.uint32
             assert sys.byteorder == "little"
             rr_image.image_info.encoding = encodings[encoding]
+            rr_image.image_info.step = rr_image.image_info.width * 4
             rr_image.data = arr.flatten(order="C").view(dtype=np.uint8).copy()
             return rr_image
 
@@ -136,6 +143,7 @@ class ImageUtil(object):
             assert arr.dtype == np.float32
             assert sys.byteorder == "little"
             rr_image.image_info.encoding = encodings[encoding]
+            rr_image.image_info.step = rr_image.image_info.width * 4
             rr_image.data = arr.flatten(order="C").view(dtype=np.uint8).copy()
             return rr_image
 
@@ -144,7 +152,7 @@ class ImageUtil(object):
     def array_to_compressed_image_jpg(self, arr, quality = 95):
         assert cv2, "OpenCV required for image compression"
 
-        rr_image = self._image_type()
+        rr_image = self._compressed_image_type()
         rr_image_info = self._image_info_type()
 
         rr_image.image_info = rr_image_info
@@ -162,7 +170,7 @@ class ImageUtil(object):
     def array_to_compressed_image_png(self, arr):
         assert cv2, "OpenCV required for image compression"
 
-        rr_image = self._image_type()
+        rr_image = self._compressed_image_type()
         rr_image_info = self._image_info_type()
 
         rr_image.image_info = rr_image_info
