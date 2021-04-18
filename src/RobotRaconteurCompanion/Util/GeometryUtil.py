@@ -204,6 +204,29 @@ class GeometryUtil(object):
         p = self.vector3_to_xyz(rr_transform["translation"])
         return rox.Transform(R,p)
 
+    def _xyz_rpy_to_rox_transform(self, xyz,rpy,parent_frame_id=None,child_frame_id=None):
+        p = xyz
+        R = rox.rpy2R(rpy)
+        return rox.Transform(R,p,parent_frame_id,child_frame_id)
+
+    def _rox_transform_to_xyz_rpy(self, rox_transform):
+        R = rox_transform.R
+        p = rox_transform.p
+        return p, rox.R2rpy(R)
+
+    def _rox_transform_to_xyz_rpy_named(self, rox_transform):
+        R = rox_transform.R
+        p = rox_transform.p
+        parent_frame_id = rox_transform.parent_frame_id
+        child_frame_id = rox_transform.child_frame_id
+        return p, rox.R2rpy(R), parent_frame_id, child_frame_id
+
+    def xyz_rpy_to_transform(self, xyz, rpy, dtype=np.float64):
+        return self.rox_transform_to_transform(self._xyz_rpy_to_rox_transform(xyz,rpy),dtype)
+
+    def transform_to_xyz_rpy(self, transform):
+        return self._rox_transform_to_xyz_rpy(self.transform_to_rox_transform(transform))
+
     def rox_transform_to_named_transform(self, rox_transform, dtype=np.float64):
         ret = self._create_return_struct(self._named_transform_type, dtype)
         ret.transform = self.rox_transform_to_transform(rox_transform)
@@ -217,6 +240,12 @@ class GeometryUtil(object):
         return rox.Transform(R,p, _name_from_identifier(rr_named_transform.parent_frame), \
             _name_from_identifier(rr_named_transform.child_frame))
 
+    def xyz_rpy_to_named_transform(self, xyz, rpy, parent_frame_id, child_frame_id, dtype=np.float64):
+        return self.rox_transform_to_named_transform(self._xyz_rpy_to_rox_transform(xyz,rpy,parent_frame_id,child_frame_id),dtype)
+
+    def named_transform_to_xyz_rpy(self, transform):
+        return self._rox_transform_to_xyz_rpy_named(self.named_transform_to_rox_transform(transform))
+
     def rox_transform_to_pose(self, rox_transform, dtype=np.float64):
         ret = self._create_return_np(self._pose_type, dtype)
         ret[0]["orientation"] = self.R_to_quaternion(rox_transform.R)
@@ -227,6 +256,12 @@ class GeometryUtil(object):
         R = self.quaternion_to_R(rr_pose["orientation"])
         p = self.vector3_to_xyz(rr_pose["position"])
         return rox.Transform(R,p)
+
+    def xyz_rpy_to_pose(self, xyz, rpy, dtype=np.float64):
+        return self.rox_transform_to_pose(self._xyz_rpy_to_rox_transform(xyz,rpy),dtype)
+
+    def pose_to_xyz_rpy(self, transform):
+        return self._rox_transform_to_xyz_rpy(self.pose_to_rox_transform(transform))
 
     def rox_transform_to_named_pose(self, rox_transform, dtype=np.float64):
         ret = self._create_return_struct(self._named_pose_type, dtype)
@@ -240,6 +275,12 @@ class GeometryUtil(object):
         p = self.vector3_to_xyz(rr_named_pose.pose["position"])
         return rox.Transform(R,p,_name_from_identifier(rr_named_pose.parent_frame), \
             _name_from_identifier(rr_named_pose.frame))
+
+    def xyz_rpy_to_named_pose(self, xyz, rpy, parent_frame_id, child_frame_id, dtype=np.float64):
+        return self.rox_transform_to_named_pose(self._xyz_rpy_to_rox_transform(xyz,rpy,parent_frame_id,child_frame_id),dtype)
+
+    def named_pose_to_xyz_rpy(self, transform):
+        return self._rox_transform_to_xyz_rpy_named(self.named_pose_to_rox_transform(transform))
 
     def array_to_spatial_velocity(self, spatial_velocity, dtype=np.float64):
         ret = self._create_return_np(self._spatial_velocity_type, dtype)
