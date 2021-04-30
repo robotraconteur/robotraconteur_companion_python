@@ -69,8 +69,12 @@ class RobustPollingAsyncFunctionCaller:
                 if self._error_handler is not None:
                     self._error_handler(e)
             except:
-                traceback.print_exc()            
-            self._refresh_retry()
+                traceback.print_exc()
+            try:
+                self._refresh_retry()
+            except RR.InvalidOperationException:
+                pass
+
 
     def _refresh_handler(self, val, err):
         with self._lock:
