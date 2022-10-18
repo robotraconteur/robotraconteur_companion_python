@@ -23,7 +23,7 @@ jobs:
         sudo apt-get install python3-robotraconteur python3-pytest python3-numpy 
         python3-yaml python3-setuptools python3-wheel
     - name: python pip
-      run: python3 -m pip install --user robotraconteur_companion_python
+      run: python3 -m pip install --user ./robotraconteur_companion_python
     - name: python pytest
       run: python3 -m pytest robotraconteur_companion_python/test -s
       
