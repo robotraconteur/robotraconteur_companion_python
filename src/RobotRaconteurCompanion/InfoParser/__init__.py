@@ -80,6 +80,8 @@ class InfoParser(object):
 
     def _parse_number(self,d,type_def):
         if type_def.ArrayType == RR.DataTypes_ArrayTypes_none:
+            if type_def.Type == RR.DataTypes_bool_t:
+                return bool(d)
             if type_def.Type == RR.DataTypes_double_t or type_def.Type == RR.DataTypes_single_t:
                 return float(d)
             else:
@@ -257,6 +259,7 @@ class InfoParser(object):
         if isinstance(d,str) or isinstance(d,int) or isinstance(d,float):
             ret = struct_type()
             ret.name = str(d)
+            ret.uuid = np.resize(ret.uuid,(1,))
             return True,ret
         return False,None
 
