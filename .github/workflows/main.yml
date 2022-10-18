@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
+
+jobs:
+  main:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur_companion_python
+    - name: robotraconteur ppa
+      run: |
+        sudo add-apt-repository -y ppa:robotraconteur/ppa
+        sudo apt-get update
+    - name: apt install
+      run: >
+        sudo apt-get install python3-robotraconteur python3-pytest python3-numpy 
+        python3-yaml python3-setuptools python3-wheel
+    - name: python pip
+      run: python3 -m pip install --user robotraconteur_companion_python
+    - name: python pytest
+      run: python3 -m pytest robotraconteur_companion_python/test -s
+      
+
+      
+    
