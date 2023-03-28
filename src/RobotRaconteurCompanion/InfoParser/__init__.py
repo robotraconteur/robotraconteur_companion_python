@@ -214,7 +214,7 @@ class InfoParser(object):
         with open(filename, 'r') as f:
             file_text = f.read()
 
-        return ParseInfoString(self, file_text, type_name)
+        return self.ParseInfoString(file_text, type_name)
 
     def ParseInfoString(self, info_string, type_name):
         struct_type, struct_def = self._find_structure(type_name)
