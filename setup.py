@@ -20,7 +20,7 @@ setup(
         'PyYAML',
         'setuptools',
         'importlib_resources',
-        'general_robotics_toolbox'
+        'general_robotics_toolbox>=0.7.1'
     ],
     tests_require=['pytest'],
     extras_require={

@@ -89,11 +89,22 @@ class RobotUtil:
         flange_q = chain.flange_pose["orientation"]
         flange_p = chain.flange_pose["position"]
 
-        r_tool = rox.q2R(self._node.NamedArrayToArray(flange_q).flatten())
-        p_tool = np.array(self._node.NamedArrayToArray(flange_p).flatten())
+        r_flange = rox.q2R(self._node.NamedArrayToArray(flange_q).flatten())
+        p_flange = np.array(self._node.NamedArrayToArray(flange_p).flatten())
+
+        T_base = None
+        if robot_info.device_info is not None:
+            robot_device_info = robot_info.device_info
+            if robot_device_info.device_origin_pose is not None:
+                robot_origin_pose = robot_device_info.device_origin_pose
+                if robot_origin_pose.pose is not None:
+                    r_base = rox.q2R(self._node.NamedArrayToArray(robot_origin_pose.pose["orientation"]).flatten())
+                    p_base = np.array(self._node.NamedArrayToArray(robot_origin_pose.pose["position"]).flatten())
+                    T_base = rox.Transform(r_base, p_base)
 
         rox_robot = rox.Robot(H, P, joint_type, joint_lower_limit, joint_upper_limit, joint_vel_limit,
-            joint_acc_limit, None, r_tool, p_tool, joint_names, root_link_name, tip_link_name)
+            joint_acc_limit, joint_names=joint_names, root_link_name=root_link_name, tip_link_name=tip_link_name,
+            T_flange=rox.Transform(r_flange,p_flange), T_base=T_base)
 
         return rox_robot
             
