@@ -73,7 +73,7 @@ def _get_user_identifier_path():
 def _open_lock_write(file_path):    
     if sys.platform == "win32":
         fname_buf = ctypes.create_unicode_buffer(str(file_path))
-        h = ctypes.windll.kernel32.CreateFileW(fname_buf, 0x80000000 | 0x40000000, 0x00000001, None, 4, 0x00000080)
+        h = ctypes.windll.kernel32.CreateFileW(fname_buf, 0x80000000 | 0x40000000, 0x00000001, None, 4, 0x00000080, None)
         if h == -1:
             win_err = ctypes.windll.kernel32.GetLastError()
             if win_err ==  32:
