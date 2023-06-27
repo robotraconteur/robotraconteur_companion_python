@@ -1,0 +1,8 @@
+sphinx_autodoc_typehints
+recommonmark
+setuptools
+general_robotics_toolbox>=0.7.1
+importlib_resources
+numpy
+PyYAML
+-e .

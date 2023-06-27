@@ -7,6 +7,25 @@ class RobustPollingAsyncFunctionCaller:
     """
     Class to call function that is polled periodically, or
     when requested
+
+    :param f: The function to call
+    :type f: callable
+    :param f_args: The arguments to pass to the function
+    :type f_args: list
+    :param retry_backoff: The time to wait before retrying a failed call
+    :type retry_backoff: float
+    :param max_retry_attempts: The maximum number of retry attempts
+    :type max_retry_attempts: int
+    :param poll_interval: The polling interval in seconds
+    :type poll_interval: float
+    :param call_timeout: The timeout for the function call
+    :type call_timeout: float
+    :param error_handler: The error handler to call if the function call fails
+    :type error_handler: callable
+    :param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+    :type node: RobotRaconteur.RobotRaconteurNode
+    :param client_obj: (optional) The client object to use for finding types. Defaults to None
+    :type client_obj: RobotRaconteur.ClientObject
     """
 
     def __init__(self, f, f_args, retry_backoff = 1, max_retry_attempts = 10, poll_interval = 30, call_timeout = 1, error_handler = None, node = None, client_obj = None):
@@ -39,6 +58,9 @@ class RobustPollingAsyncFunctionCaller:
 
     @property
     def poll_data(self):
+        """
+        Returns the current polled data
+        """
         return self._poll_data
     @poll_data.setter
     def poll_data(self,value):
@@ -120,5 +142,8 @@ class RobustPollingAsyncFunctionCaller:
         self.request_poll()
 
     def close(self):
+        """
+        Close the polling function caller
+        """
         self._poll_timer.Stop()
         self._poll_timer = None

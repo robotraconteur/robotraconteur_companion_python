@@ -8,6 +8,16 @@ from .IdentifierUtil import IdentifierUtil
 from ..InfoParser import InfoParser
 
 class InfoFileLoader(object):
+    """
+    Utility class to load device info Yaml structures from file
+
+    See the Robot Raconteur camera driver for an example of using this class.
+
+    :param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+    :type node: RobotRaconteur.RobotRaconteurNode
+    :param client_obj: (optional) The client object to use for finding types. Defaults to None
+    :type client_obj: RobotRaconteur.ClientObject
+    """
 
     def __init__(self, node = None, client_obj = None):
         if node is None:
@@ -43,11 +53,39 @@ class InfoFileLoader(object):
         return False, None, None
 
     def LoadInfoFileFromString(self, info_text, info_type_name, category = "unspecified"):
+        """
+        Load a device info Yaml structure from a string and assign a device identifier
+
+        In most cases the category should be set to "device".
+
+        :param info_text: The info Yaml structure to load
+        :type info_text: str
+        :param info_type_name: The type name of the info Yaml structure
+        :type info_type_name: str
+        :param category: (optional) The category of the device identifier. Defaults to "unspecified".
+        :type category: str
+        :return: The loaded info Yaml structure and the device identifier lock file descriptor
+        :rtype: tuple
+        """
         info = self._info_parser.ParseInfoString(info_text, info_type_name)
         _, _, fds = self._load_device_identifier(info,category)
         return info, fds
 
     def LoadInfoFile(self, file_name, info_type_name, category = "unspecified"):
+        """
+        Load a device info Yaml structure from a file and assign a device identifier
+
+        In most cases the category should be set to "device".
+
+        :param file_name: The file name of the info Yaml structure to load
+        :type file_name: str
+        :param info_type_name: The type name of the info Yaml structure
+        :type info_type_name: str
+        :param category: (optional) The category of the device identifier. Defaults to "unspecified".
+        :type category: str
+        :return: The loaded info Yaml structure and the device identifier lock file descriptor
+        :rtype: tuple
+        """
         info = self._info_parser.ParseInfoFile(file_name, info_type_name)
         _, _, fds = self._load_device_identifier(info,category)
         return info, fds

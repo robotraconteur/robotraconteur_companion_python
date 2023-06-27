@@ -12,6 +12,17 @@ def _find_by_name(v,name):
     return None
 
 class InfoParser(object):
+    """
+    Class to load YAML info files into Robot Raconteur device info structures. This wil
+    typically be called from InfoFileLoader instead of being called directly.
+
+    :param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+    :type node: RobotRaconteur.RobotRaconteurNode
+    :param client_obj: (optional) The client object to use for finding types. Defaults to None
+    :type client_obj: RobotRaconteur.ClientObject
+
+    """
+
     def __init__(self, node = None, client_obj = None):
         if node is None:
             self.node = RR.RobotRaconteurNode.s
@@ -209,6 +220,20 @@ class InfoParser(object):
         return None
 
     def ParseInfoFile(self, filename, type_name):
+        """
+        Load and parse a YAML file containing contents of a device info structure. The type_name 
+        must be the fully qualified name of the structure type. The structure type must be defined
+        in a service definition loaded into the node, or pulled by a client object.
+
+        :param filename: The filename of the YAML file to load
+        :type filename: str
+        :param type_name: The fully qualified name of the structure type. Examples include 
+          ``com.robotraconteur.robotics.robot.DeviceInfo`` and ``com.robotraconteur.robotics.robot.RobotInfo``
+        :type type_name: str
+        :return: The parsed structure
+
+        """
+
         struct_type = self._find_structure(type_name)
 
         with open(filename, 'r') as f:
@@ -217,6 +242,20 @@ class InfoParser(object):
         return self.ParseInfoString(file_text, type_name)
 
     def ParseInfoString(self, info_string, type_name):
+        """
+        Parse a YAML string containing contents of a device info structure. The type_name
+        must be the fully qualified name of the structure type. The structure type must be defined
+        in a service definition loaded into the node, or pulled by a client object.
+
+        :param info_string: The YAML string to parse
+        :type info_string: str
+        :param type_name: The fully qualified name of the structure type. Examples include
+            ``com.robotraconteur.robotics.robot.DeviceInfo`` and ``com.robotraconteur.robotics.robot.RobotInfo``
+        :type type_name: str
+        :return: The parsed structure
+
+        """
+
         struct_type, struct_def = self._find_structure(type_name)
         if struct_type is None:
             raise RR.InvalidArgumentException("Invalid structure type specified")
