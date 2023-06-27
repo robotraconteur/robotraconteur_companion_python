@@ -12,8 +12,6 @@ The name is used to identify services and devices when guaranteed unique identif
 
 .. code-block:: python
 
-    .. code-block:: python
-
     import RobotRaconteur as RR
     RRN = RR.RobotRaconteurNode.s
     import RobotRaconteurCompanion as RRC
