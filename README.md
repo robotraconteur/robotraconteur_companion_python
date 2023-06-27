@@ -40,7 +40,7 @@ pip install RobotRaconteurCompanion
 
 ## Documentation
 
-Documentation for the Robot Raconteur companion library is available at https://robotraconteur.github.io/robotraconteur_companion_python/
+Documentation for the Robot Raconteur companion library is available at https://robot-raconteur-companion-python.readthedocs.io/en/latest/
 
 ## Standard Service Types 
 
