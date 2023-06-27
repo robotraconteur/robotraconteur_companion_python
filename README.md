@@ -9,7 +9,7 @@ Other language versions are available at https://github.com/robotraconteur.
 
 Robot Raconteur Core focuses on the core capabilities of Robot Raconteur, such as transport, discovery, and
 communication. The companion contains a number of miscelanous utilities that are useful for working with other libraries
-such as Eigen, and for working with standard Robot Raconteur service types 
+such as numpy, and for working with standard Robot Raconteur service types 
 (https://github.com/robotraconteur/robotraconteur_standard_robdef).
 
 The companion library is not required to use Robot Raconteur, but is recommended for most users.
