@@ -13,7 +13,7 @@ def get_service_type_from_resource(package, resource):
     ext = ""
     if importlib.resources.is_resource(package, resource + ".robdef"):
         ext = ".robdef"    
-    robdef_text = importlib.resources.read_text(package,resource + ext)
+    robdef_text = (importlib.resources.files(package) / (resource + ext)).read_text()
     return robdef_text
 
 def get_service_types_from_resources(package, resources):
@@ -22,6 +22,6 @@ def get_service_types_from_resources(package, resources):
         ext = ""
         if importlib.resources.is_resource(package, resource + ".robdef"):
             ext = ".robdef"
-        robdef_text = importlib.resources.read_text(package,resource + ext)
+        robdef_text = (importlib.resources.read_text(package) / (resource + ext)).read_text()
         robdefs_text.append(robdef_text)
     return robdefs_text
