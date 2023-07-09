@@ -9,7 +9,7 @@ def test_infoparser():
     node.Init()
     try:
         RRC.RegisterStdRobDefServiceTypes(node)
-        info_text = importlib_resources.read_text(test_infoparser_m, 'sawyer_robot_default_config.yml')
+        info_text = (importlib_resources.files(test_infoparser_m) / ('sawyer_robot_default_config.yml')).read_text()
         parser = InfoFileLoader(node)
         robot_info, fd = parser.LoadInfoFileFromString(info_text,"com.robotraconteur.robotics.robot.RobotInfo",category="test")
         with fd:            

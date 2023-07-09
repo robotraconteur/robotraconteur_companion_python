@@ -52,7 +52,7 @@ STANDARD_ROBDEF_TEXT={}
 def _load_standard_robdef_text():
     import importlib_resources
     for n in STANDARD_ROBDEF_NAMES:
-        robdef_text = importlib_resources.read_text(__package__, n + '.robdef')
+        robdef_text = (importlib_resources.files() / (n + '.robdef')).read_text()
         STANDARD_ROBDEF_TEXT[n] = robdef_text
 
 _load_standard_robdef_text()
