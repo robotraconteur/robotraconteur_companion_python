@@ -58,5 +58,13 @@ def _load_standard_robdef_text():
 _load_standard_robdef_text()
 
 def RegisterStdRobDefServiceTypes(node):
+    """
+    Register standard Robot Raconteur service types to a node. This function will call RegisterServiceTypes() for
+    the standard services types to register them into the node.
+
+    :param node: The node to register the service types to. Typically this will be ``RRN`` for the default node.
+    :type node: RobotRaconteur.RobotRaconteurNode
+    """
+    
     robdefs_text = list(STANDARD_ROBDEF_TEXT.values())
     node.RegisterServiceTypes(robdefs_text)

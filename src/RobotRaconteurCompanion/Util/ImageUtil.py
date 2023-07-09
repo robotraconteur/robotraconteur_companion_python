@@ -9,6 +9,15 @@ try:
 except:
     cv2 = None
 
+"""
+Utility class to convert between Robot Raconteur Image structures and OpenCV format images. The OpenCV format
+images are typically numpy arrays in monochrom, BGR, or BGRA format.
+
+:param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+:type node: RobotRaconteur.RobotRaconteurNode
+:param client_obj: (optional) The client object to use for finding types. Defaults to None
+:type client_obj: RobotRaconteur.ClientObject
+"""
 class ImageUtil(object):
 
     def __init__(self, node = None, client_obj = None):
@@ -24,6 +33,25 @@ class ImageUtil(object):
         self._image_const = self._node.GetConstants("com.robotraconteur.image", self._client_obj)
         
     def image_to_array(self, rr_image):
+        """
+        Convert a Robot Raconteur Image to an array. The array will be in the format specified by the image encoding.
+
+        The following image encoding codes are supported:
+
+        - bgr888
+        - rgb888
+        - bgra8888
+        - rgba8888
+        - mono8
+        - mono16
+        - mono32
+        - depth_f32
+
+        :param rr_image: The Robot Raconteur Image to convert
+        :type rr_image: com.robotraconteur.image.Image
+        :return: The converted image
+        :rtype: numpy.ndarray
+        """
 
         encoding = rr_image.image_info.encoding
 
@@ -64,6 +92,27 @@ class ImageUtil(object):
         assert False, f"Unknown image encoding: {encoding}"
 
     def array_to_image(self, arr, encoding):
+        """
+        Convert a numpy array to a Robot Raconteur Image. The array must be in the format specified by the image encoding.
+
+        The following image encoding codes are supported:
+
+        - bgr888
+        - rgb888
+        - bgra8888
+        - rgba8888
+        - mono8
+        - mono16
+        - mono32
+        - depth_f32
+
+        :param arr: The array to convert
+        :type arr: numpy.ndarray
+        :encoding: The image encoding
+        :type encoding: str
+        :return: The converted image
+        :rtype: com.robotraconteur.image.Image
+        """
 
         encodings = self._image_const["ImageEncoding"]
 
@@ -150,6 +199,16 @@ class ImageUtil(object):
         assert False, f"Unknown image encoding: {encoding}"
 
     def array_to_compressed_image_jpg(self, arr, quality = 95):
+        """
+        Convert a numpy array to a compressed Robot Raconteur Image in jpg format.
+
+        :param arr: The array to convert
+        :type arr: numpy.ndarray
+        :param quality: The JPEG quality (0-100). Default is 95.
+        :type quality: int
+        :return: The converted image
+        :rtype: com.robotraconteur.image.CompressedImage
+        """
         assert cv2, "OpenCV required for image compression"
 
         rr_image = self._compressed_image_type()
@@ -168,6 +227,14 @@ class ImageUtil(object):
         return rr_image
 
     def array_to_compressed_image_png(self, arr):
+        """
+        Convert a numpy array to a compressed Robot Raconteur Image in png format.
+
+        :param arr: The array to convert
+        :type arr: numpy.ndarray
+        :return: The converted image
+        :rtype: com.robotraconteur.image.CompressedImage
+        """
         assert cv2, "OpenCV required for image compression"
 
         rr_image = self._compressed_image_type()
@@ -186,6 +253,14 @@ class ImageUtil(object):
         return rr_image
 
     def compressed_image_to_array(self,rr_compressed_image,flags=-1):
+        """
+        Convert a compressed Robot Raconteur Image to a numpy array. This function uses cv2.imdecode to decode the image.
+
+        :param rr_compressed_image: The image to convert
+        :type rr_compressed_image: com.robotraconteur.image.CompressedImage
+        :param flags: OpenCV flags for decoding. Default is -1.
+        :type flags: int
+        """
 
         return cv2.imdecode(rr_compressed_image.data,flags)
 

@@ -5,6 +5,14 @@ import numpy as np
 from .DateTimeUtil import DateTimeUtil
 
 class SensorDataUtil(object):
+    """
+    Fill in a SensorDataHeader with the current time and sequence number
+
+    :param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+    :type node: RobotRaconteur.RobotRaconteurNode
+    :param client_obj: (optional) The client object to use for finding types. Defaults to None
+    :type client_obj: RobotRaconteur.ClientObject
+    """
 
     def __init__(self, node = None, client_obj = None):
         if node is None:
@@ -20,6 +28,14 @@ class SensorDataUtil(object):
         self._datetime_util = DateTimeUtil(node,client_obj)
 
     def FillSensorDataHeader(self, device_info, seqno):
+        """
+        Fill in a SensorDataHeader with the current time and sequence number
+
+        :param device_info: The device info to use for the source info
+        :type device_info: com.robotraconteur.device.DeviceInfo
+        :param seqno: The sequence number to use
+        :type seqno: int
+        """
         ret = self._sensordataheader()
         ret.seqno = seqno
         ret.ts = self._datetime_util.TimeSpec2Now(device_info)

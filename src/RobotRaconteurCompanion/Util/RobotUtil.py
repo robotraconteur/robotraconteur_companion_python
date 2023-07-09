@@ -12,6 +12,17 @@ def _check_list(l, error_msg, expected_count = -1):
             raise RR.InvalidArgumentException(error_msg)
 
 class RobotUtil:
+    """
+    Utility class to convert a Robot Raconteur com.robotraconteur.robotics.robot.RobotInfo to
+    a general_robotics_toolbox.Robot object.
+
+    The RobotInfo is provided by robot drivers and is used to describe the kinematics of the robot.
+
+    :param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+    :type node: RobotRaconteur.RobotRaconteurNode
+    :param client_obj: (optional) The client object to use for finding types. Defaults to None
+    :type client_obj: RobotRaconteur.ClientObject
+    """
     def __init__(self, node = None, client_obj = None):
         if node is None:
             self._node = RRN
@@ -20,6 +31,17 @@ class RobotUtil:
         self._client_obj = client_obj
 
     def robot_info_to_rox_robot(self, robot_info, chain_number):
+        """
+        Convert a RobotInfo to a general_robotics_toolbox.Robot object
+
+        :param robot_info: The RobotInfo to convert
+        :type robot_info: com.robotraconteur.robotics.robot.RobotInfo
+        :param chain_number: The kinematic chain number to convert. For a single arm robot, this is 0. 
+            For a dual arm robot, this is 0 for the left arm and 1 for the right arm.
+        :type chain_number: int
+        :return: The converted robot
+        :rtype: general_robotics_toolbox.Robot
+        """
         _check_list(robot_info.chains, f"could not find kinematic chain number {chain_number}")
         if chain_number >= len(robot_info.chains): 
             raise RR.InvalidArgumentException(f"invalid kinematic chain number {chain_number}")

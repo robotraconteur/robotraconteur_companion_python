@@ -4,7 +4,27 @@ import numpy as np
 
 from .IdentifierUtil import IdentifierUtil
 
+
 class AttributesUtil(object):
+    """  
+    Utility class to get the default attributes from a DeviceInfo structure. These attributes are
+    used to populate the default service attributes when registering a service
+    with a device.
+    
+    The following attributes are used:
+    
+    - device
+    - parent_device
+    - manufacturer
+    - model
+    - serial_number
+    - user_description
+
+    :param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+    :type node: RobotRaconteur.RobotRaconteurNode
+    :param client_obj: (optional) The client object to use for finding types. Defaults to None
+    :type client_obj: RobotRaconteur.ClientObject
+    """
 
     def __init__(self, node = None, client_obj = None):
         if node is None:
@@ -28,6 +48,15 @@ class AttributesUtil(object):
         return False        
         
     def GetDefaultServiceAttributesFromDeviceInfo(self, device_info):
+        """
+        Get the default service attributes from a DeviceInfo structure. These attributes are
+        used to populate the default service attributes when registering a service.
+
+        :param device_info: The device info structure
+        :type device_info: com.robotraconteur.DeviceInfo
+        :return: The default service attributes
+        :rtype: dict
+        """
         o = dict()
         self._try_add_identifier(o,"device", device_info.device)
         self._try_add_identifier(o,"parent_device", device_info.parent_device)
