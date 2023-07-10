@@ -1,0 +1,9 @@
+service experimental.testrobdef
+
+struct s1
+   field double d1
+end
+
+object o1
+    property double p1
+end
