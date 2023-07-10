@@ -1,5 +1,5 @@
 import RobotRaconteur as RR
-import importlib.resources
+import importlib_resources
 
 def register_service_type_from_resource(node, package, resource):
     """
@@ -41,9 +41,9 @@ def get_service_type_from_resource(package, resource):
     :rtype: str
     """
     ext = ""
-    if importlib.resources.is_resource(package, resource + ".robdef"):
+    if (importlib_resources.files(package) / (resource + ".robdef")).exists():
         ext = ".robdef"    
-    robdef_text = (importlib.resources.files(package) / (resource + ext)).read_text()
+    robdef_text = (importlib_resources.files(package) / (resource + ext)).read_text()
     return robdef_text
 
 def get_service_types_from_resources(package, resources):
@@ -60,8 +60,8 @@ def get_service_types_from_resources(package, resources):
     robdefs_text = []
     for resource in resources:
         ext = ""
-        if importlib.resources.is_resource(package, resource + ".robdef"):
+        if (importlib_resources.files(package) / (resource + ".robdef")).exists():
             ext = ".robdef"
-        robdef_text = (importlib.resources.files(package) / (resource + ext)).read_text()
+        robdef_text = (importlib_resources.files(package) / (resource + ext)).read_text()
         robdefs_text.append(robdef_text)
     return robdefs_text
