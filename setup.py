@@ -2,7 +2,7 @@ from setuptools import setup, find_packages, find_namespace_packages
 
 setup(
     name='RobotRaconteurCompanion',
-    version='0.2.1',
+    version='0.3.0',
     description='Robot Raconteur Python Companion Library',
     author='John Wason',
     author_email='wason@wasontech.com',
@@ -15,7 +15,7 @@ setup(
         '*.robdef'
     ]},
     install_requires=[
-        'RobotRaconteur>=0.17.0',
+        'RobotRaconteur>=0.18.0',
         'numpy',
         'PyYAML',
         'setuptools',
