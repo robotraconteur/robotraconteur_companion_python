@@ -27,7 +27,7 @@ end
 """
 
 
-class TestTaskGenImpl(AsyncTaskGenerator):
+class _TestTaskGenImpl(AsyncTaskGenerator):
 
     def __init__(self, node, status_type, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout):
         super().__init__(node, status_type, next_timeout, watchdog_timeout)
@@ -91,7 +91,7 @@ class SyncTestTaskGenImpl(SyncTaskGenerator):
             raise RR.OperationFailedException("Task failed")
 
 
-class TestGenObjectImpl:
+class _TestGenObjectImpl:
 
     def __init__(self, node):
         self.node = node
@@ -99,7 +99,7 @@ class TestGenObjectImpl:
             "experimental.testing.companion.test_task_generator_py.TestGenStatus")
 
     def test_task_generator(self, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout):
-        return TestTaskGenImpl(self.node, self.status_type, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout)
+        return _TestTaskGenImpl(self.node, self.status_type, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout)
 
     def test_sync_task_generator(self, done_time, fail_time, next_timeout, watchdog_timeout):
         return SyncTestTaskGenImpl(self.node, self.status_type, done_time, fail_time, next_timeout, watchdog_timeout)
@@ -112,7 +112,7 @@ class TaskGenTestFixture:
         self.fixture.register_standard_service_types()
         self.fixture.register_service_types_text([robdef_text])
 
-        self.test_gen_obj = TestGenObjectImpl(self.fixture.server_node)
+        self.test_gen_obj = _TestGenObjectImpl(self.fixture.server_node)
 
         self.fixture.register_service(
             "test_gen", "experimental.testing.companion.test_task_generator_py.TestGenObject", self.test_gen_obj)
