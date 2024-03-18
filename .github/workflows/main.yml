@@ -26,6 +26,23 @@ jobs:
       run: python3 -m pip install --user ./robotraconteur_companion_python
     - name: python pytest
       run: python3 -m pytest robotraconteur_companion_python/test -s
+  main-pythonver:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python_version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur_companion_python
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '${{ matrix.python_version}}'
+    - name: python pip
+      run: python -m pip install --user ./robotraconteur_companion_python
+    - name: python pytest
+      run: python -m pytest robotraconteur_companion_python/test -s
   pre-commit:
     runs-on: ubuntu-22.04
     env:
