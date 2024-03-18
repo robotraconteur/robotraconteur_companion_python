@@ -42,7 +42,7 @@ jobs:
     - name: upgrade python pip
       run: python -m pip install --upgrade pip
     - name: python pip
-      run: python -m pip install --user ./robotraconteur_companion_python
+      run: python -m pip install --user ./robotraconteur_companion_python[test]
     - name: python pytest
       run: python -m pytest robotraconteur_companion_python/test -s
   pre-commit:
