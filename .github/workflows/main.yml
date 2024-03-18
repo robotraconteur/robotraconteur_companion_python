@@ -5,7 +5,7 @@ on:
   pull_request:
   release:
     types:
-      - created
+    - created
 
 jobs:
   main:
@@ -20,7 +20,7 @@ jobs:
         sudo apt-get update
     - name: apt install
       run: >
-        sudo apt-get install python3-robotraconteur python3-pytest python3-numpy 
+        sudo apt-get install python3-robotraconteur python3-pytest python3-numpy
         python3-yaml python3-setuptools python3-wheel
     - name: python pip
       run: python3 -m pip install --user ./robotraconteur_companion_python
@@ -39,5 +39,4 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y dos2unix
-    - uses: pre-commit/action@v3.0.1      
-    
+    - uses: pre-commit/action@v3.0.1

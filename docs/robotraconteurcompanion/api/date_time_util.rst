@@ -30,4 +30,3 @@ DateTimeUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.DateTimeUtil.DateTimeUtil
     :members:
-    

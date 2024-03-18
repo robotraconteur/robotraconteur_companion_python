@@ -1,6 +1,7 @@
 import RobotRaconteur as RR
 from RobotRaconteurCompanion.Util import RobDef
 
+
 def test_robdef_util():
     node = RR.RobotRaconteurNode()
     RobDef.register_service_type_from_resource(node, __package__, "experimental.robdef_test")

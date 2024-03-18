@@ -35,4 +35,3 @@ GeometryUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.GeometryUtil.GeometryUtil
     :members:
-    

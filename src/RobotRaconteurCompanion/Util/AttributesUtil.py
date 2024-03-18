@@ -6,13 +6,13 @@ from .IdentifierUtil import IdentifierUtil
 
 
 class AttributesUtil(object):
-    """  
+    """
     Utility class to get the default attributes from a DeviceInfo structure. These attributes are
     used to populate the default service attributes when registering a service
     with a device.
-    
+
     The following attributes are used:
-    
+
     - device
     - parent_device
     - manufacturer
@@ -26,7 +26,7 @@ class AttributesUtil(object):
     :type client_obj: RobotRaconteur.ClientObject
     """
 
-    def __init__(self, node = None, client_obj = None):
+    def __init__(self, node=None, client_obj=None):
         if node is None:
             self._node = RRN
         else:
@@ -37,16 +37,16 @@ class AttributesUtil(object):
 
     def _try_add_identifier(self, o, name, id_):
         if not self._ident_util.IsIdentifierAny(id_):
-            o[name] =  RR.VarValue(self._ident_util.IdentifierToString(id_),"string")
+            o[name] = RR.VarValue(self._ident_util.IdentifierToString(id_), "string")
             return True
         return False
 
     def _try_add_string(self, o, name, str_):
         if str_ is not None and len(str_) > 0:
-            o[name] = RR.VarValue(str_,"string")
+            o[name] = RR.VarValue(str_, "string")
             return True
-        return False        
-        
+        return False
+
     def GetDefaultServiceAttributesFromDeviceInfo(self, device_info):
         """
         Get the default service attributes from a DeviceInfo structure. These attributes are
@@ -58,10 +58,10 @@ class AttributesUtil(object):
         :rtype: dict
         """
         o = dict()
-        self._try_add_identifier(o,"device", device_info.device)
-        self._try_add_identifier(o,"parent_device", device_info.parent_device)
-        self._try_add_identifier(o,"manufacturer", device_info.manufacturer)
-        self._try_add_identifier(o,"model", device_info.model)
-        self._try_add_string(o,"serial_number",device_info.serial_number)
-        self._try_add_string(o,"user_description",device_info.user_description)
+        self._try_add_identifier(o, "device", device_info.device)
+        self._try_add_identifier(o, "parent_device", device_info.parent_device)
+        self._try_add_identifier(o, "manufacturer", device_info.manufacturer)
+        self._try_add_identifier(o, "model", device_info.model)
+        self._try_add_string(o, "serial_number", device_info.serial_number)
+        self._try_add_string(o, "user_description", device_info.user_description)
         return o

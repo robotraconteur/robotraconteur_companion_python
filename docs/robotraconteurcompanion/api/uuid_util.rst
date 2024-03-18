@@ -38,4 +38,3 @@ UuidUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.UuidUtil.UuidUtil
     :members:
-    

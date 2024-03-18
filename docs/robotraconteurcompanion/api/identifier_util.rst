@@ -42,4 +42,3 @@ IdentifierUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.IdentifierUtil.IdentifierUtil
     :members:
-    

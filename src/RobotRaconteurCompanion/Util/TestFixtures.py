@@ -3,6 +3,7 @@ import RobotRaconteur as RR
 from .RobDef import register_service_types_from_resources
 from ..StdRobDef import RegisterStdRobDefServiceTypes
 
+
 class IntraTaskFixture:
     """
     A test fixture for intra-process testing using Robot Raconteur.
@@ -25,6 +26,7 @@ class IntraTaskFixture:
     :ivar server_transport: The server transport
     :vartype server_transport: RobotRaconteur.IntraTransport
     """
+
     def __init__(self):
         self.client_node = RR.RobotRaconteurNode()
         self.server_node = RR.RobotRaconteurNode()
@@ -51,7 +53,7 @@ class IntraTaskFixture:
         :param robdef_text: The service type text
         :type robdef_text: str
         """
-        #self.client_node.RegisterServiceTypes(robdef_text)
+        # self.client_node.RegisterServiceTypes(robdef_text)
         self.server_node.RegisterServiceTypes(robdef_text)
 
     def register_service_types_from_resources(self, package, resources):
@@ -64,7 +66,7 @@ class IntraTaskFixture:
         :type resources: list[str]
         """
 
-        #register_service_types_from_resources(self.client_node, package, resources)
+        # register_service_types_from_resources(self.client_node, package, resources)
         register_service_types_from_resources(self.server_node, package, resources)
 
     def register_service(self, name, objtype, obj):
@@ -84,7 +86,7 @@ class IntraTaskFixture:
         """
         Register standard service types
         """
-        #RegisterStdRobDefServiceTypes(self.client_node)
+        # RegisterStdRobDefServiceTypes(self.client_node)
         RegisterStdRobDefServiceTypes(self.server_node)
 
     def connect_service(self, url):
@@ -97,7 +99,7 @@ class IntraTaskFixture:
         :rtype: object
         """
         return self.client_node.ConnectService(url)
-    
+
     def shutdown(self):
         """
         Shutdown the fixture
@@ -112,7 +114,6 @@ class IntraTaskFixture:
 
     def __enter__(self):
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         self.shutdown()
-        

@@ -47,7 +47,8 @@ STANDARD_ROBDEF_NAMES = [
     'com.robotraconteur.uuid'
 ]
 
-STANDARD_ROBDEF_TEXT={}
+STANDARD_ROBDEF_TEXT = {}
+
 
 def _load_standard_robdef_text():
     import importlib_resources
@@ -55,7 +56,9 @@ def _load_standard_robdef_text():
         robdef_text = (importlib_resources.files() / (n + '.robdef')).read_text()
         STANDARD_ROBDEF_TEXT[n] = robdef_text
 
+
 _load_standard_robdef_text()
+
 
 def RegisterStdRobDefServiceTypes(node):
     """
@@ -65,6 +68,6 @@ def RegisterStdRobDefServiceTypes(node):
     :param node: The node to register the service types to. Typically this will be ``RRN`` for the default node.
     :type node: RobotRaconteur.RobotRaconteurNode
     """
-    
+
     robdefs_text = list(STANDARD_ROBDEF_TEXT.values())
     node.RegisterServiceTypes(robdefs_text)

@@ -16,7 +16,7 @@ Utility class for filling in com.robotraconteur.sensordata.SensorDataHeader stru
     camera_info, camera_ident_fd = info_loader.LoadInfoFileFromString(camera_info_text, "com.robotraconteur.imaging.camerainfo.CameraInfo", "camera")
 
     sensordata_util = SensorDataUtil(RRN)
-    
+
     while True:
 
         # Do some work on the driver
@@ -33,4 +33,3 @@ SensorDataUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.SensorDataUtil.SensorDataUtil
     :members:
-    

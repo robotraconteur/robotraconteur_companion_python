@@ -9,7 +9,7 @@ Other language versions are available at https://github.com/robotraconteur.
 
 Robot Raconteur Core focuses on the core capabilities of Robot Raconteur, such as transport, discovery, and
 communication. The companion contains a number of miscelanous utilities that are useful for working with other libraries
-such as numpy, and for working with standard Robot Raconteur service types 
+such as numpy, and for working with standard Robot Raconteur service types
 (https://github.com/robotraconteur/robotraconteur_standard_robdef).
 
 The companion library is not required to use Robot Raconteur, but is recommended for most users.
@@ -42,9 +42,9 @@ pip install RobotRaconteurCompanion
 
 Documentation for the Robot Raconteur companion library is available at https://robot-raconteur-companion-python.readthedocs.io/en/latest/
 
-## Standard Service Types 
+## Standard Service Types
 
-The companion library contains the standard service types available at 
+The companion library contains the standard service types available at
 https://github.com/robotraconteur/robotraconteur_standard_robdef . These types can be registered
 with the local Node using the following code:
 
@@ -60,8 +60,8 @@ Registering the standard service types is not required for clients since they wi
 ## Device Info Structure YAML Parsers and Attributes Util
 
 Device Info structures are used to describe devices and their capabilities. The structures are provided
-to clients at runtime, typically through a property of a device service. For example, the 
-`com.robotraconteur.device.Device` standard type defines the `device_info` property. The 
+to clients at runtime, typically through a property of a device service. For example, the
+`com.robotraconteur.device.Device` standard type defines the `device_info` property. The
 `com.robotraconteur.robotics.robot.Robot` standard type defines both `device_info` and `robot_info` properties.
 These structures can be used to describe a wide variety of devices, including robots, sensors, and other devices.
 YAML files are used to store the contents of these structures to make it easier to create and edit them. The
@@ -238,7 +238,7 @@ assert id_util.IsIdentifierMatch(my_device_identifier, my_device_identifier2)
 
 ## Miscellaneous Utilities
 
-Other utility classes are provided for various purposes. These include populating 
+Other utility classes are provided for various purposes. These include populating
 `com.robotraconteur.sensordata.SensorData` structures, periodically calling a function, and loading
 Robot Raconteur service info files from packages. See the documentation for more information.
 

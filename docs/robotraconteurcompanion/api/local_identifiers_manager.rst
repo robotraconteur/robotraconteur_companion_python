@@ -8,4 +8,3 @@ LocalIdentifiersManager
 
 .. autoclass:: RobotRaconteurCompanion.Util.LocalIdentifiersManager.LocalIdentifiersManager
     :members:
-    

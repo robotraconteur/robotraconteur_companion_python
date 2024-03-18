@@ -1,7 +1,7 @@
 RobotRaconteurCompanion.Util.RobDef
 =======================================
 
-Utility function to register custom robdef service definition files from a Python package. 
+Utility function to register custom robdef service definition files from a Python package.
 Custom robdef files can be included as package resources. See the `abb_robotraconteur_driver_hmp <https://github.com/robotraconteur-contrib/abb_robotraconteur_driver_hmp>`_
 driver for an example of using this utility.
 

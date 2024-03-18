@@ -26,6 +26,7 @@ object TestGenObject
 end
 """
 
+
 class TestTaskGenImpl(AsyncTaskGenerator):
 
     def __init__(self, node, status_type, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout):
@@ -44,10 +45,11 @@ class TestTaskGenImpl(AsyncTaskGenerator):
         self.status_update_timer.Start()
 
     def task_complete_timeout(self, ev):
-        if ev.stopped: return
+        if ev.stopped:
+            return
         status = self._status_type()
         status.action_status = self._action_const["ActionStatusCode"]["complete"]
-        status.message= "Task completed"
+        status.message = "Task completed"
         status.data = {}
         status.data["test"] = RR.VarValue([5], "int32[]")
         self.SetResult(status)
@@ -56,7 +58,8 @@ class TestTaskGenImpl(AsyncTaskGenerator):
         self.task_failed_timer = None
 
     def task_failed_timeout(self, ev):
-        if ev.stopped: return
+        if ev.stopped:
+            return
         err = RR.OperationFailedException("Task failed")
         self.SetResultException(err)
 
@@ -64,8 +67,10 @@ class TestTaskGenImpl(AsyncTaskGenerator):
         self.task_failed_timer = None
 
     def status_update_timeout(self, ev):
-        if ev.stopped: return
+        if ev.stopped:
+            return
         self.SendUpdate()
+
 
 class SyncTestTaskGenImpl(SyncTaskGenerator):
     def __init__(self, node, status_type, done_time, fail_time, next_timeout, watchdog_timeout):
@@ -77,37 +82,40 @@ class SyncTestTaskGenImpl(SyncTaskGenerator):
         if self.done_time <= self.fail_time:
             time.sleep(self.done_time)
             status = self._status_type()
-            status.message= "Task completed"
+            status.message = "Task completed"
             status.data = {}
             status.data["test"] = RR.VarValue([5], "int32[]")
             return status
         else:
             time.sleep(self.fail_time)
             raise RR.OperationFailedException("Task failed")
-        
+
 
 class TestGenObjectImpl:
 
     def __init__(self, node):
         self.node = node
-        self.status_type = self.node.GetStructureType("experimental.testing.companion.test_task_generator_py.TestGenStatus")
+        self.status_type = self.node.GetStructureType(
+            "experimental.testing.companion.test_task_generator_py.TestGenStatus")
 
     def test_task_generator(self, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout):
         return TestTaskGenImpl(self.node, self.status_type, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout)
 
     def test_sync_task_generator(self, done_time, fail_time, next_timeout, watchdog_timeout):
         return SyncTestTaskGenImpl(self.node, self.status_type, done_time, fail_time, next_timeout, watchdog_timeout)
-    
+
+
 class TaskGenTestFixture:
 
     def __init__(self):
         self.fixture = IntraTaskFixture()
         self.fixture.register_standard_service_types()
         self.fixture.register_service_types_text([robdef_text])
-        
+
         self.test_gen_obj = TestGenObjectImpl(self.fixture.server_node)
 
-        self.fixture.register_service("test_gen", "experimental.testing.companion.test_task_generator_py.TestGenObject", self.test_gen_obj)
+        self.fixture.register_service(
+            "test_gen", "experimental.testing.companion.test_task_generator_py.TestGenObject", self.test_gen_obj)
 
         self.test_gen_obj_client = self.fixture.connect_service("rr+intra:///?nodename=server_node&service=test_gen")
 
@@ -115,14 +123,16 @@ class TaskGenTestFixture:
 
     def test_task_generator(self, done_time, fail_time, status_update_time, next_timeout, watchdog_timeout):
         return self.test_gen_obj_client.test_task_generator(done_time, fail_time, status_update_time, next_timeout, watchdog_timeout)
-    
+
     def test_sync_task_generator(self, done_time, fail_time, next_timeout, watchdog_timeout):
         return self.test_gen_obj_client.test_sync_task_generator(done_time, fail_time, next_timeout, watchdog_timeout)
 
+
 def run_task_gen_test(done_time, fail_time, status_update_time, next_timeout, watchdog_timeout, next_delay):
     fixture = TaskGenTestFixture()
-    gen = fixture.test_gen_obj_client.test_task_generator(done_time, fail_time, status_update_time, next_timeout, watchdog_timeout)
-    
+    gen = fixture.test_gen_obj_client.test_task_generator(
+        done_time, fail_time, status_update_time, next_timeout, watchdog_timeout)
+
     res = False
     while True:
         res, status = gen.TryNext()
@@ -133,10 +143,11 @@ def run_task_gen_test(done_time, fail_time, status_update_time, next_timeout, wa
         if not res:
             break
 
+
 def run_task_gen_test_status_update():
     fixture = TaskGenTestFixture()
     gen = fixture.test_gen_obj_client.test_task_generator(.200, 2.000, .050, 2.000, 2.100)
-    
+
     res, status = gen.TryNext()
     assert res
     res, status = gen.TryNext()
@@ -148,10 +159,11 @@ def run_task_gen_test_status_update():
     res, status = gen.TryNext()
     assert not res
 
+
 def run_task_gen_test_status_update2():
     fixture = TaskGenTestFixture()
     gen = fixture.test_gen_obj_client.test_task_generator(.200, 2.000, .050, 2.000, 2.100)
-    
+
     res, status = gen.TryNext()
     assert res
     time.sleep(0.1)
@@ -164,10 +176,11 @@ def run_task_gen_test_status_update2():
     res, status = gen.TryNext()
     assert not res
 
+
 def run_sync_task_gen_test(done_time, fail_time, next_timeout, watchdog_timeout, next_delay):
     fixture = TaskGenTestFixture()
     gen = fixture.test_gen_obj_client.test_sync_task_generator(done_time, fail_time, next_timeout, watchdog_timeout)
-    
+
     res = False
     while True:
         res, status = gen.TryNext()
@@ -177,6 +190,7 @@ def run_sync_task_gen_test(done_time, fail_time, next_timeout, watchdog_timeout,
             break
         if res and next_delay > 0:
             time.sleep(next_delay)
+
 
 def test_async_task_generator():
 
@@ -192,6 +206,7 @@ def test_async_task_generator():
     run_task_gen_test(2.000, 5.000, 5.000, .050, .200, .025)
     run_task_gen_test_status_update()
     run_task_gen_test_status_update2()
+
 
 def test_sync_task_generator():
     with pytest.raises(RR.OperationAbortedException):

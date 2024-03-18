@@ -1,3 +1,13 @@
+"""
+Utility class to convert between Robot Raconteur Image structures and OpenCV format images. The OpenCV format
+images are typically numpy arrays in monochrom, BGR, or BGRA format.
+
+:param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
+:type node: RobotRaconteur.RobotRaconteurNode
+:param client_obj: (optional) The client object to use for finding types. Defaults to None
+:type client_obj: RobotRaconteur.ClientObject
+"""
+
 import RobotRaconteur as RR
 RRN = RR.RobotRaconteurNode.s
 import numpy as np
@@ -9,29 +19,22 @@ try:
 except:
     cv2 = None
 
-"""
-Utility class to convert between Robot Raconteur Image structures and OpenCV format images. The OpenCV format
-images are typically numpy arrays in monochrom, BGR, or BGRA format.
 
-:param node: (optional) The Robot Raconteur node to use for parsing. Defaults to RobotRaconteurNode.s
-:type node: RobotRaconteur.RobotRaconteurNode
-:param client_obj: (optional) The client object to use for finding types. Defaults to None
-:type client_obj: RobotRaconteur.ClientObject
-"""
 class ImageUtil(object):
 
-    def __init__(self, node = None, client_obj = None):
+    def __init__(self, node=None, client_obj=None):
         if node is None:
             self._node = RRN
         else:
             self._node = node
         self._client_obj = client_obj
-        
+
         self._image_type = self._node.GetStructureType("com.robotraconteur.image.Image", self._client_obj)
         self._image_info_type = self._node.GetStructureType("com.robotraconteur.image.ImageInfo", self._client_obj)
-        self._compressed_image_type = self._node.GetStructureType("com.robotraconteur.image.CompressedImage", self._client_obj)
+        self._compressed_image_type = self._node.GetStructureType(
+            "com.robotraconteur.image.CompressedImage", self._client_obj)
         self._image_const = self._node.GetConstants("com.robotraconteur.image", self._client_obj)
-        
+
     def image_to_array(self, rr_image):
         """
         Convert a Robot Raconteur Image to an array. The array will be in the format specified by the image encoding.
@@ -62,7 +65,7 @@ class ImageUtil(object):
 
         if encoding == encodings["rgb888"]:
             img1 = rr_image.data.reshape([rr_image.image_info.height, rr_image.image_info.width, 3], order='C')
-            return img1[...,::-1].copy()
+            return img1[..., ::-1].copy()
 
         if encoding == encodings["bgra8888"]:
             return rr_image.data.reshape([rr_image.image_info.height, rr_image.image_info.width, 4], order='C')
@@ -70,8 +73,8 @@ class ImageUtil(object):
         if encoding == encodings["rgba8888"]:
             img1 = rr_image.data.reshape([rr_image.image_info.height, rr_image.image_info.width, 4], order='C')
             img2 = img1.copy()
-            img2[...,0] = img1[...,2]
-            img2[...,2] = img1[...,0]
+            img2[..., 0] = img1[..., 2]
+            img2[..., 2] = img1[..., 0]
             return img2
 
         if encoding == encodings["mono8"]:
@@ -88,7 +91,7 @@ class ImageUtil(object):
         if encoding == encodings["depth_f32"]:
             assert sys.byteorder == "little"
             return rr_image.data.view(dtype=np.float32).reshape([rr_image.image_info.height, rr_image.image_info.width], order='C').copy()
-        
+
         assert False, f"Unknown image encoding: {encoding}"
 
     def array_to_image(self, arr, encoding):
@@ -137,8 +140,8 @@ class ImageUtil(object):
             rr_image.image_info.encoding = encodings["rgb888"]
             rr_image.image_info.step = rr_image.image_info.width * 3
             rr_image.data = arr.flatten(order="C")
-            rr_image.data[0::3] = arr[...,2].flatten(order="C")
-            rr_image.data[2::3] = arr[...,0].flatten(order="C")
+            rr_image.data[0::3] = arr[..., 2].flatten(order="C")
+            rr_image.data[2::3] = arr[..., 0].flatten(order="C")
             return rr_image
 
         if encoding == "bgra8888":
@@ -154,15 +157,15 @@ class ImageUtil(object):
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["rgba8888"]
             rr_image.image_info.step = rr_image.image_info.width * 4
-            rr_image.data = np.zeros((arr.size,),dtype=np.uint8)
-            rr_image.data[0::4] = arr[...,2].flatten(order="C")
-            rr_image.data[1::4] = arr[...,1].flatten(order="C")
-            rr_image.data[2::4] = arr[...,0].flatten(order="C")
-            rr_image.data[3::4] = arr[...,3].flatten(order="C")
+            rr_image.data = np.zeros((arr.size,), dtype=np.uint8)
+            rr_image.data[0::4] = arr[..., 2].flatten(order="C")
+            rr_image.data[1::4] = arr[..., 1].flatten(order="C")
+            rr_image.data[2::4] = arr[..., 0].flatten(order="C")
+            rr_image.data[3::4] = arr[..., 3].flatten(order="C")
             return rr_image
 
         if encoding == "mono8":
-            assert arr.ndim ==2 or arr.shape[2] == 1
+            assert arr.ndim == 2 or arr.shape[2] == 1
             assert arr.dtype == np.uint8
             rr_image.image_info.encoding = encodings["mono8"]
             rr_image.image_info.step = rr_image.image_info.width
@@ -170,7 +173,7 @@ class ImageUtil(object):
             return rr_image
 
         if encoding == "mono16" or encoding == "depth_u16":
-            assert arr.ndim ==2 or arr.shape[2] == 1
+            assert arr.ndim == 2 or arr.shape[2] == 1
             assert arr.dtype == np.uint16
             assert sys.byteorder == "little"
             rr_image.image_info.encoding = encodings[encoding]
@@ -179,7 +182,7 @@ class ImageUtil(object):
             return rr_image
 
         if encoding == "mono32" or encoding == "depth_u32":
-            assert arr.ndim ==2 or arr.shape[2] == 1
+            assert arr.ndim == 2 or arr.shape[2] == 1
             assert arr.dtype == np.uint32
             assert sys.byteorder == "little"
             rr_image.image_info.encoding = encodings[encoding]
@@ -188,7 +191,7 @@ class ImageUtil(object):
             return rr_image
 
         if encoding == "depth_f32":
-            assert arr.ndim ==2 or arr.shape[2] == 1
+            assert arr.ndim == 2 or arr.shape[2] == 1
             assert arr.dtype == np.float32
             assert sys.byteorder == "little"
             rr_image.image_info.encoding = encodings[encoding]
@@ -198,7 +201,7 @@ class ImageUtil(object):
 
         assert False, f"Unknown image encoding: {encoding}"
 
-    def array_to_compressed_image_jpg(self, arr, quality = 95):
+    def array_to_compressed_image_jpg(self, arr, quality=95):
         """
         Convert a numpy array to a compressed Robot Raconteur Image in jpg format.
 
@@ -219,7 +222,7 @@ class ImageUtil(object):
         rr_image_info.height = arr.shape[0]
         rr_image_info.encoding = self._image_const["ImageEncoding"]["compressed"]
 
-        res, encimg = cv2.imencode(".jpg",arr,[int(cv2.IMWRITE_JPEG_QUALITY), quality])
+        res, encimg = cv2.imencode(".jpg", arr, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
 
         assert res, "Image compression failed"
 
@@ -245,14 +248,14 @@ class ImageUtil(object):
         rr_image_info.height = arr.shape[0]
         rr_image_info.encoding = self._image_const["ImageEncoding"]["compressed"]
 
-        res, encimg = cv2.imencode(".png",arr)
+        res, encimg = cv2.imencode(".png", arr)
 
         assert res, "Image compression failed"
 
         rr_image.data = encimg
         return rr_image
 
-    def compressed_image_to_array(self,rr_compressed_image,flags=-1):
+    def compressed_image_to_array(self, rr_compressed_image, flags=-1):
         """
         Convert a compressed Robot Raconteur Image to a numpy array. This function uses cv2.imdecode to decode the image.
 
@@ -262,6 +265,4 @@ class ImageUtil(object):
         :type flags: int
         """
 
-        return cv2.imdecode(rr_compressed_image.data,flags)
-
-    
+        return cv2.imdecode(rr_compressed_image.data, flags)
