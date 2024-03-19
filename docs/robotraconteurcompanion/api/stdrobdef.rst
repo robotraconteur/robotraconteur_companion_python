@@ -1,7 +1,7 @@
 Standard Robot Raconteur Service Types
 ======================================
 
-The companion library contains the standard Robot Raconteur service types, ofter referred to as the 
+The companion library contains the standard Robot Raconteur service types, ofter referred to as the
 "standard robdef" types. The can be loaded into the Robot Raconteur node using the utility
 function ``RobotRaconteurCompanion.StdRobDef.RegisterStdRobDefServiceTypes()``. The
 names of the service types and the text can be accessed using the ``STANDARD_ROBDEF_NAMES`` and

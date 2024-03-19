@@ -3,6 +3,7 @@ RRN = RR.RobotRaconteurNode.s
 import threading
 import traceback
 
+
 class RobustPollingAsyncFunctionCaller:
     """
     Class to call function that is polled periodically, or
@@ -28,7 +29,7 @@ class RobustPollingAsyncFunctionCaller:
     :type client_obj: RobotRaconteur.ClientObject
     """
 
-    def __init__(self, f, f_args, retry_backoff = 1, max_retry_attempts = 10, poll_interval = 30, call_timeout = 1, error_handler = None, node = None, client_obj = None):
+    def __init__(self, f, f_args, retry_backoff=1, max_retry_attempts=10, poll_interval=30, call_timeout=1, error_handler=None, node=None, client_obj=None):
         if node is None:
             self._node = RRN
         else:
@@ -62,8 +63,9 @@ class RobustPollingAsyncFunctionCaller:
         Returns the current polled data
         """
         return self._poll_data
+
     @poll_data.setter
-    def poll_data(self,value):
+    def poll_data(self, value):
         assert value == self._poll_data
 
     def request_poll(self):
@@ -81,10 +83,10 @@ class RobustPollingAsyncFunctionCaller:
     def _do_refresh(self):
         try:
             if len(self._f_args) == 0:
-                self._f(self._refresh_handler,self._call_timeout)
+                self._f(self._refresh_handler, self._call_timeout)
             else:
-                self._f(*self._f_args,self._refresh_handler,self._call_timeout)
-    
+                self._f(*self._f_args, self._refresh_handler, self._call_timeout)
+
             self._refreshing = True
         except Exception as e:
             try:
@@ -97,7 +99,6 @@ class RobustPollingAsyncFunctionCaller:
             except RR.InvalidOperationException:
                 pass
 
-
     def _refresh_handler(self, val, err):
         with self._lock:
             if err is not None:
@@ -105,7 +106,7 @@ class RobustPollingAsyncFunctionCaller:
                 self._refresh_retry()
                 return
             self._retry_attempts = 0
-        
+
         try:
             self._poll_data.fire(val)
         except Exception as e:
@@ -116,7 +117,7 @@ class RobustPollingAsyncFunctionCaller:
                 traceback.print_exc()
 
         with self._lock:
-            if self._refresh_requested:                
+            if self._refresh_requested:
                 self._refresh_retry()
             else:
                 self._refreshing = False

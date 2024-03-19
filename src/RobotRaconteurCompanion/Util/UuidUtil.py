@@ -3,6 +3,7 @@ RRN = RR.RobotRaconteurNode.s
 import numpy as np
 import uuid as py_uuid
 
+
 class UuidUtil(object):
     """
     Utility class for working with Robot Raconteur UUIDs
@@ -13,13 +14,13 @@ class UuidUtil(object):
     :type client_obj: RobotRaconteur.ClientObject
     """
 
-    def __init__(self, node = None, client_obj = None):
+    def __init__(self, node=None, client_obj=None):
         if node is None:
             self._node = RRN
         else:
             self._node = node
         self._client_obj = client_obj
-        
+
         self._uuid_dt = self._node.GetNamedArrayDType("com.robotraconteur.uuid.UUID", self._client_obj)
 
     def UuidFromPyUuid(self, py_uuid):
@@ -31,9 +32,9 @@ class UuidUtil(object):
         :return: The Robot Raconteur UUID
         :rtype: com.robotraconteur.uuid.UUID
         """
-        ret_bytes = np.frombuffer(py_uuid.bytes,dtype=np.uint8)
-        ret = np.zeros((1,),dtype=self._uuid_dt)
-        ret[0]["uuid_bytes"]=ret_bytes
+        ret_bytes = np.frombuffer(py_uuid.bytes, dtype=np.uint8)
+        ret = np.zeros((1,), dtype=self._uuid_dt)
+        ret[0]["uuid_bytes"] = ret_bytes
         return ret
 
     def UuidToPyUuid(self, uuid):
@@ -58,7 +59,7 @@ class UuidUtil(object):
         new_uuid = py_uuid.uuid4()
         return self.UuidFromPyUuid(new_uuid)
 
-    def ParseUuid(self,uuid_str):
+    def ParseUuid(self, uuid_str):
         """
         Parse a UUID string into a Robot Raconteur UUID
 
@@ -67,7 +68,7 @@ class UuidUtil(object):
         """
         return self.UuidFromPyUuid(py_uuid.UUID(uuid_str))
 
-    def UuidToString(self,uuid):
+    def UuidToString(self, uuid):
         """
         Convert a Robot Raconteur UUID to a string
 

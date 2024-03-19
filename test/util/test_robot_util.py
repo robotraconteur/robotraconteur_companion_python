@@ -7,27 +7,28 @@ import numpy.testing as nptest
 import numpy as np
 import general_robotics_toolbox as rox
 
+
 def test_infoparser():
     node = RR.RobotRaconteurNode()
     node.Init()
     try:
         RRC.RegisterStdRobDefServiceTypes(node)
-        info_f = importlib_resources.files() / ".." / "infoparser" / 'sawyer_robot_default_config.yml'
+        info_f = importlib_resources.files(__package__) / ".." / "infoparser" / 'sawyer_robot_default_config.yml'
         parser = InfoParser(node)
-        robot_info = parser.ParseInfoFile(info_f,"com.robotraconteur.robotics.robot.RobotInfo")
+        robot_info = parser.ParseInfoFile(info_f, "com.robotraconteur.robotics.robot.RobotInfo")
 
         robot_util = RobotUtil(node)
         robot = robot_util.robot_info_to_rox_robot(robot_info, 0)
-        
+
         nptest.assert_allclose(robot.joint_type, [0, 0, 0, 0, 0, 0, 0])
         nptest.assert_allclose(robot.joint_lower_limit,
-                            [-3.0503, -3.8095, -3.0426, -3.0439, -2.9761, -2.9761, -4.7124])
+                               [-3.0503, -3.8095, -3.0426, -3.0439, -2.9761, -2.9761, -4.7124])
         nptest.assert_allclose(robot.joint_upper_limit, [
-                            3.0503, 2.2736, 3.0426, 3.0439, 2.9761, 2.9761, 4.7124])
+            3.0503, 2.2736, 3.0426, 3.0439, 2.9761, 2.9761, 4.7124])
         nptest.assert_allclose(robot.joint_vel_limit, [
-                            1.74, 1.328, 1.957, 1.957, 3.485, 3.485, 4.545])
+            1.74, 1.328, 1.957, 1.957, 3.485, 3.485, 4.545])
         nptest.assert_allclose(robot.joint_acc_limit, [
-                            3.5, 2.5, 5.0, 5.0, 5.0, 5.0, 5.0])
+            3.5, 2.5, 5.0, 5.0, 5.0, 5.0, 5.0])
         assert robot.joint_names == [
             'right_j0', 'right_j1', 'right_j2', 'right_j3', 'right_j4', 'right_j5', 'right_j6']
         assert robot.root_link_name == "right_arm_base_link"
@@ -54,22 +55,22 @@ def test_infoparser2():
     node.Init()
     try:
         RRC.RegisterStdRobDefServiceTypes(node)
-        info_f = importlib_resources.files() / "sawyer_robot_with_electric_gripper_config.yml"
+        info_f = importlib_resources.files(__package__) / "sawyer_robot_with_electric_gripper_config.yml"
         parser = InfoParser(node)
-        robot_info = parser.ParseInfoFile(info_f,"com.robotraconteur.robotics.robot.RobotInfo")
+        robot_info = parser.ParseInfoFile(info_f, "com.robotraconteur.robotics.robot.RobotInfo")
 
         robot_util = RobotUtil(node)
         robot = robot_util.robot_info_to_rox_robot(robot_info, 0)
-        
+
         nptest.assert_allclose(robot.joint_type, [0, 0, 0, 0, 0, 0, 0])
         nptest.assert_allclose(robot.joint_lower_limit,
-                            [-3.0503, -3.8095, -3.0426, -3.0439, -2.9761, -2.9761, -4.7124])
+                               [-3.0503, -3.8095, -3.0426, -3.0439, -2.9761, -2.9761, -4.7124])
         nptest.assert_allclose(robot.joint_upper_limit, [
-                            3.0503, 2.2736, 3.0426, 3.0439, 2.9761, 2.9761, 4.7124])
+            3.0503, 2.2736, 3.0426, 3.0439, 2.9761, 2.9761, 4.7124])
         nptest.assert_allclose(robot.joint_vel_limit, [
-                            1.74, 1.328, 1.957, 1.957, 3.485, 3.485, 4.545])
+            1.74, 1.328, 1.957, 1.957, 3.485, 3.485, 4.545])
         nptest.assert_allclose(robot.joint_acc_limit, [
-                            3.5, 2.5, 5.0, 5.0, 5.0, 5.0, 5.0])
+            3.5, 2.5, 5.0, 5.0, 5.0, 5.0, 5.0])
         assert robot.joint_names == [
             'right_j0', 'right_j1', 'right_j2', 'right_j3', 'right_j4', 'right_j5', 'right_j6']
         assert robot.root_link_name == "right_arm_base_link"
@@ -78,7 +79,7 @@ def test_infoparser2():
         # nptest.assert_allclose(robot.R_tool, rox.rot(
         #     [0, 0, 1], np.deg2rad(5)), atol=1e-4)
         # nptest.assert_allclose(robot.p_tool, [0, 0, 0.1577], atol=1e-4)
-        T_base_expected=rox.Transform(rox.rot([0,0,1],-np.pi/2), [0.5, 0.23, 0.8])
+        T_base_expected = rox.Transform(rox.rot([0, 0, 1], -np.pi / 2), [0.5, 0.23, 0.8])
         assert T_base_expected.isclose(robot.T_base, tol=1e-4)
         nptest.assert_allclose(rox.R2q(
             robot.T_flange.R), [-0.45451851, 0.54167662, -0.45452185, 0.54167264], atol=1e-4)

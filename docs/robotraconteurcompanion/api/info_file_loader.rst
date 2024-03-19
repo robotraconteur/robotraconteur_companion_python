@@ -64,4 +64,3 @@ InfoFileLoader
 
 .. autoclass:: RobotRaconteurCompanion.Util.InfoFileLoader.InfoFileLoader
     :members:
-    

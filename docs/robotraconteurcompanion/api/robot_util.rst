@@ -1,7 +1,7 @@
 RobotRaconteurCompanion.Util.RobotUtil
 ===========================================
 
-Utility class for to convert a com.robotraconteur.robotics.robot.RobotInfo structure to a 
+Utility class for to convert a com.robotraconteur.robotics.robot.RobotInfo structure to a
 general_robotics_toolbox.Robot object. The general_robotics_toolbox package contains functions
 for working with robot kinematics.
 
@@ -31,4 +31,3 @@ RobotUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.RobotUtil.RobotUtil
     :members:
-    

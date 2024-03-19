@@ -1,6 +1,7 @@
 import RobotRaconteur as RR
 import importlib_resources
 
+
 def register_service_type_from_resource(node, package, resource):
     """
     Register a service type from a package resource
@@ -12,8 +13,9 @@ def register_service_type_from_resource(node, package, resource):
     :param resource: The resource name
     :type resource: str
     """
-    robdef_text = get_service_type_from_resource(package,resource)
+    robdef_text = get_service_type_from_resource(package, resource)
     node.RegisterServiceType(robdef_text)
+
 
 def register_service_types_from_resources(node, package, resources):
     """
@@ -26,8 +28,9 @@ def register_service_types_from_resources(node, package, resources):
     :param resources: The list of resource names
     :type resources: list[str]
     """
-    robdefs_text = get_service_types_from_resources(package,resources)
+    robdefs_text = get_service_types_from_resources(package, resources)
     node.RegisterServiceTypes(robdefs_text)
+
 
 def get_service_type_from_resource(package, resource):
     """
@@ -42,9 +45,10 @@ def get_service_type_from_resource(package, resource):
     """
     ext = ""
     if (importlib_resources.files(package) / (resource + ".robdef")).exists():
-        ext = ".robdef"    
+        ext = ".robdef"
     robdef_text = (importlib_resources.files(package) / (resource + ext)).read_text()
     return robdef_text
+
 
 def get_service_types_from_resources(package, resources):
     """

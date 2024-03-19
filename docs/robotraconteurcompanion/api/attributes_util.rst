@@ -28,4 +28,3 @@ AttributesUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.AttributesUtil.AttributesUtil
     :members:
-    

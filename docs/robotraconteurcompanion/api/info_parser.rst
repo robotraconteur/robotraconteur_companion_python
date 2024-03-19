@@ -7,7 +7,6 @@ the InfoFileLoader utility class.
 InfoParser
 ----------
 
-.. autoclass:: RobotRaconteurCompanion.InfoParser.InfoParser    
+.. autoclass:: RobotRaconteurCompanion.InfoParser.InfoParser
     :noindex:
     :members:
-    

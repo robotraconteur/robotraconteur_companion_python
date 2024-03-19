@@ -33,4 +33,3 @@ ImageUtil
 
 .. autoclass:: RobotRaconteurCompanion.Util.ImageUtil.ImageUtil
     :members:
-    

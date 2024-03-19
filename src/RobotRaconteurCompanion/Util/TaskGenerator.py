@@ -1,6 +1,7 @@
 import RobotRaconteur as RR
 import threading
 
+
 class AsyncTaskGenerator:
     """
     Base class for asynchronous task generators
@@ -28,6 +29,7 @@ class AsyncTaskGenerator:
     :param watchdog_timeout: The timeout for the watchdog in seconds. -1 to disable.
     :type watchdog_timeout: float
     """
+
     def __init__(self, node, status_type, next_timeout, watchdog_timeout):
         self._node = node
         self._status_type = status_type
@@ -47,12 +49,13 @@ class AsyncTaskGenerator:
         self._send_update = False
         self._action_const = node.GetConstants("com.robotraconteur.action")
 
-    def AsyncNext(self,handler):
+    def AsyncNext(self, handler):
         with self._this_lock:
             if self._watchdog_timeout is not None:
                 try:
                     self._watchdog_timer.Stop()
-                except Exception: pass
+                except Exception:
+                    pass
                 self._watchdog_timer = None
             if self._aborted:
                 raise RR.OperationAbortedException("Operation aborted")
@@ -65,14 +68,14 @@ class AsyncTaskGenerator:
                 ret.action_status = self._action_const["ActionStatusCode"]["running"]
                 handler(ret, None)
                 return
-            
+
             if self._next_handler is not None:
                 raise RR.InvalidOperationException("Next call already in progress")
-            
+
             if self._task_completed:
                 self._complete_gen(handler)
                 return
-            
+
             if (self._send_update):
                 self._send_update = False
                 ret = self._status_type()
@@ -80,13 +83,14 @@ class AsyncTaskGenerator:
                 self.FillStatus(ret)
                 handler(ret, None)
                 return
-            
+
             self._next_handler = handler
             self._next_timer = self._node.CreateTimer(self._next_timeout, self._next_timer_handler, True)
             self._next_timer.Start()
 
             if self._watchdog_timeout > 0:
-                self._watchdog_timer = self._node.CreateTimer(self._watchdog_timeout, self._watchdog_timer_handler, True)
+                self._watchdog_timer = self._node.CreateTimer(
+                    self._watchdog_timeout, self._watchdog_timer_handler, True)
                 self._watchdog_timer.Start()
 
     def AsyncAbort(self, handler, timeout):
@@ -103,12 +107,11 @@ class AsyncTaskGenerator:
         with self._this_lock:
             if self._closed or self._aborted:
                 handler(None)
-                return            
+                return
             self._closed = True
             if self._started:
                 self.CloseRequested()
         handler(None)
-            
 
     def SetResult(self, result):
         """
@@ -120,7 +123,8 @@ class AsyncTaskGenerator:
         :param result: The result to return
         """
         with self._this_lock:
-            if self._task_completed: return
+            if self._task_completed:
+                return
             self._result = result
             self._do_result()
 
@@ -134,7 +138,8 @@ class AsyncTaskGenerator:
         :param exp: The exception to return
         """
         with self._this_lock:
-            if self._task_completed: return
+            if self._task_completed:
+                return
             self._exception_result = exp
             self._do_result()
 
@@ -145,11 +150,12 @@ class AsyncTaskGenerator:
         if h is not None:
             try:
                 self._next_timer.Stop()
-            except Exception: pass
+            except Exception:
+                pass
             self._next_timer = None
             self._complete_gen(h)
             return
-        
+
     def _complete_gen(self, handler):
         self._completed = True
         if self._exception_result is not None:
@@ -169,16 +175,17 @@ class AsyncTaskGenerator:
         FillStatus() to fill the status report.
         """
         with self._this_lock:
-            if self._task_completed or self._aborted or self._closed: 
+            if self._task_completed or self._aborted or self._closed:
                 return
-            
+
             if self._next_handler is None:
                 self._send_update = True
                 return
-            
+
             try:
                 self._next_timer.Stop()
-            except Exception: pass
+            except Exception:
+                pass
 
             self._do_send_update()
 
@@ -190,7 +197,7 @@ class AsyncTaskGenerator:
         override this method to start the task.
         """
         raise NotImplementedError("")
-    
+
     def CloseRequested(self):
         """
         This method is called when a close request is received.
@@ -227,13 +234,15 @@ class AsyncTaskGenerator:
             self.FillStatus(ret)
             h(ret, None)
             return
-        
+
     def _watchdog_timer_handler(self, evt):
         with self._this_lock:
-            if evt.stopped: return
-            if self._task_completed: return
+            if evt.stopped:
+                return
+            if self._task_completed:
+                return
             self._aborted = True
-            self.AbortRequested()    
+            self.AbortRequested()
 
 
 class SyncTaskGenerator(AsyncTaskGenerator):
@@ -257,6 +266,7 @@ class SyncTaskGenerator(AsyncTaskGenerator):
     :param watchdog_timeout: The timeout for the watchdog in seconds. -1 to disable.
     :type watchdog_timeout: float
     """
+
     def __init__(self, node, status_type, next_timeout, watchdog_timeout):
         super().__init__(node, status_type, next_timeout, watchdog_timeout)
 
@@ -272,7 +282,7 @@ class SyncTaskGenerator(AsyncTaskGenerator):
         :rtype: status_type
         """
         raise NotImplementedError("RunTask not implemented")
-    
+
     def run_task_thread(self):
         try:
             ret = self.RunTask()
@@ -283,5 +293,3 @@ class SyncTaskGenerator(AsyncTaskGenerator):
     def StartTask(self):
         self._thread = threading.Thread(target=self.run_task_thread)
         self._thread.start()
-
-

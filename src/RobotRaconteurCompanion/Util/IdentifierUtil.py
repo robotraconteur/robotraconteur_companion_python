@@ -5,6 +5,7 @@ import re
 
 from .UuidUtil import UuidUtil
 
+
 class IdentifierUtil(object):
     """
     Utility class for working with Robot Raconteur identifiers
@@ -15,7 +16,7 @@ class IdentifierUtil(object):
     :type client_obj: RobotRaconteur.ClientObject
     """
 
-    def __init__(self, node = None, client_obj = None):
+    def __init__(self, node=None, client_obj=None):
         if node is None:
             self._node = RRN
         else:
@@ -25,9 +26,9 @@ class IdentifierUtil(object):
         self._identifier = self._node.GetStructureType("com.robotraconteur.identifier.Identifier", self._client_obj)
         self._uuid_dt = self._node.GetNamedArrayDType("com.robotraconteur.uuid.UUID", self._client_obj)
 
-        self._uuid_util = UuidUtil(node,client_obj)
+        self._uuid_util = UuidUtil(node, client_obj)
 
-    def IsIdentifierAnyUuid(self,identifier):
+    def IsIdentifierAnyUuid(self, identifier):
         """
         Check if an identifier is "any" (UUID is all zeros)
 
@@ -40,7 +41,7 @@ class IdentifierUtil(object):
             return True
         return np.all(identifier.uuid["uuid_bytes"] == 0)
 
-    def IsIdentifierAnyName(self,identifier):
+    def IsIdentifierAnyName(self, identifier):
         """
         Check if an identifier is "any" (name is empty)
 
@@ -53,7 +54,7 @@ class IdentifierUtil(object):
             return True
         return len(identifier.name) == 0
 
-    def IsIdentifierAny(self,identifier):
+    def IsIdentifierAny(self, identifier):
         """
         Check if an identifier is "any" (UUID is all zeros and name is empty)
 
@@ -73,9 +74,9 @@ class IdentifierUtil(object):
     def IsIdentifierMatch(self, expected, test):
         """
         Check if two identifiers match
-      
+
         Identifiers have a complex matching rules:
-        
+
         - If both identifiers are "any", they match
         - If either identifier is "any", they match
         - If both identifiers have the same name and UUID, they match
@@ -92,7 +93,7 @@ class IdentifierUtil(object):
         """
         if self.IsIdentifierAny(expected) or self.IsIdentifierAny(test):
             return True
-        
+
         name_match = False
         uuid_match = False
 
@@ -110,7 +111,7 @@ class IdentifierUtil(object):
 
         return name_match and uuid_match
 
-    def CreateIdentifier(self,name,uuid):
+    def CreateIdentifier(self, name, uuid):
         """
         Create an identifier from a name and UUID
 
@@ -121,15 +122,15 @@ class IdentifierUtil(object):
         :return: The created identifier
         :rtype: com.robotraconteur.identifier.Identifier
         """
-        ret = self._identifier()        
+        ret = self._identifier()
         ret.name = name if name is not None else ""
         if uuid is not None:
             ret.uuid = self._uuid_util.ParseUuid(uuid)
         else:
-            ret.uuid = np.zeros((1,),dtype=self._uuid_dt)
+            ret.uuid = np.zeros((1,), dtype=self._uuid_dt)
         return ret
 
-    def CreateIdentifierFromName(self,name):
+    def CreateIdentifierFromName(self, name):
         """
         Create an identifier from a name. The UUID will be all zeros.
 
@@ -139,12 +140,12 @@ class IdentifierUtil(object):
         :rtype: com.robotraconteur.identifier.Identifier
         """
         assert name is not None
-        ret = self._identifier()        
-        ret.name = name        
-        ret.uuid = np.zeros((1,),dtype=self._uuid_dt)
+        ret = self._identifier()
+        ret.name = name
+        ret.uuid = np.zeros((1,), dtype=self._uuid_dt)
         return ret
 
-    def IdentifierToString(self,identifier):
+    def IdentifierToString(self, identifier):
         """
         Create a string representation of an identifier. The string representation is in the form "name|uuid".
 
@@ -174,7 +175,8 @@ class IdentifierUtil(object):
         """
         name_regex_str = "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*"
         uuid_regex_str = "\\{?[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\}?"
-        identifier_regex = "(?:(" + name_regex_str + ")\\|(" + uuid_regex_str + "))|(" + name_regex_str + ")|(" + uuid_regex_str + ")"
+        identifier_regex = "(?:(" + name_regex_str + ")\\|(" + uuid_regex_str + "))|(" + \
+            name_regex_str + ")|(" + uuid_regex_str + ")"
 
         r_res = re.match(identifier_regex, string_id)
         if r_res is None:
@@ -182,7 +184,7 @@ class IdentifierUtil(object):
 
         if r_res.group(1) is not None and r_res.group(2) is not None:
             return self.CreateIdentifier(r_res.group(1), r_res.group(2))
-        
+
         if r_res.group(3) is not None:
             return self.CreateIdentifierFromName(r_res.group(3))
 
@@ -190,10 +192,3 @@ class IdentifierUtil(object):
             return self.CreateIdentifier("", r_res.group(4))
 
         raise RR.InvalidArgumentException("Invalid identifier string")
-
-
-
-
-        
-
-        

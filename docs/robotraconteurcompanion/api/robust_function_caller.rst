@@ -9,4 +9,3 @@ RobustFunctionCaller
 
 .. autoclass:: RobotRaconteurCompanion.Util.RobustFunctionCaller.RobustPollingAsyncFunctionCaller
     :members:
-    
