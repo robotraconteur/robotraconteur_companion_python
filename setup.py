@@ -15,7 +15,7 @@ setup(
         '*.robdef'
     ]},
     install_requires=[
-        'RobotRaconteur>=0.18.0',
+        'RobotRaconteur>=1.1.1',
         'numpy',
         'PyYAML',
         'setuptools',
