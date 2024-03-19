@@ -5,4 +5,5 @@ general_robotics_toolbox>=0.7.1
 importlib_resources
 numpy
 PyYAML
+sphinx_rtd_theme
 -e .
