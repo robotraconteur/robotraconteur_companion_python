@@ -13,7 +13,7 @@ def test_infoparser():
     node.Init()
     try:
         RRC.RegisterStdRobDefServiceTypes(node)
-        info_f = importlib_resources.files() / ".." / "infoparser" / 'sawyer_robot_default_config.yml'
+        info_f = importlib_resources.files(__package__) / ".." / "infoparser" / 'sawyer_robot_default_config.yml'
         parser = InfoParser(node)
         robot_info = parser.ParseInfoFile(info_f, "com.robotraconteur.robotics.robot.RobotInfo")
 
@@ -55,7 +55,7 @@ def test_infoparser2():
     node.Init()
     try:
         RRC.RegisterStdRobDefServiceTypes(node)
-        info_f = importlib_resources.files() / "sawyer_robot_with_electric_gripper_config.yml"
+        info_f = importlib_resources.files(__package__) / "sawyer_robot_with_electric_gripper_config.yml"
         parser = InfoParser(node)
         robot_info = parser.ParseInfoFile(info_f, "com.robotraconteur.robotics.robot.RobotInfo")
 
