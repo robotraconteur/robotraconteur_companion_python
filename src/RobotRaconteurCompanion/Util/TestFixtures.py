@@ -80,7 +80,7 @@ class IntraTaskFixture:
         :param obj: The service object
         :type obj: object
         """
-        self.server_node.RegisterService(name, objtype, obj)
+        return self.server_node.RegisterService(name, objtype, obj)
 
     def register_standard_service_types(self):
         """
