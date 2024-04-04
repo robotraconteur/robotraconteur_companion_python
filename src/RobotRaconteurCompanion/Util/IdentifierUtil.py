@@ -158,10 +158,10 @@ class IdentifierUtil(object):
             return ""
         if not self.IsIdentifierAnyName(identifier) and not self.IsIdentifierAnyUuid(identifier):
             return identifier.name + "|" + self._uuid_util.UuidToString(identifier.uuid)
-        if not self.IsIdentifierAny(identifier):
+        if not self.IsIdentifierAnyName(identifier):
             return identifier.name
         if not self.IsIdentifierAnyUuid(identifier):
-            return identifier.uuid
+            return self._uuid_util.UuidToString(identifier.uuid)
         return ""
 
     def StringToIdentifier(self, string_id):
