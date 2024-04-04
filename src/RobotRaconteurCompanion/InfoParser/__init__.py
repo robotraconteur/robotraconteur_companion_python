@@ -143,6 +143,10 @@ class InfoParser(object):
                 setattr(ret, f_name, f_val)
                 continue
 
+        s_extra = "_extra_structure_" + struct_type_name.replace(".", "__")
+        if hasattr(self, s_extra):
+            getattr(self, s_extra)(ret, d, struct_type, struct_def)
+
         return ret
 
     def _parse_field_value(self, d, f_type, struct_def, service_def):
@@ -326,3 +330,26 @@ class InfoParser(object):
         s_type, s_def = self._find_structure('com.robotraconteur.imaging.camerainfo.PlumbBobDistortionInfo')
         assert s_type is not None
         return RR.VarValue(self._parse_structure(d, s_type, s_def), 'com.robotraconteur.imaging.camerainfo.PlumbBobDistortionInfo')
+
+    def _extra_structure_com__robotraconteur__device__DeviceInfo(self, s, d, struct_type, struct_def):
+        s_type, s_def = self._find_structure("com.robotraconteur.identifier.Identifier")
+
+        tags_out = []
+        tags_in = []
+        tags1 = d.get("tags", None)
+        if tags1 is not None:
+            tags_in.extend(tags1)
+        extended1 = d.get("extended", None)
+        if extended1 is not None:
+            tags2 = extended1.get("tags", None)
+            if tags2 is not None:
+                tags_in.extend(tags2)
+
+        for t in tags_in:
+            tags_out.append(RR.VarValue(self._parse_structure(t, s_type, s_def),
+                            "com.robotraconteur.identifier.Identifier"))
+
+        if len(tags_out) > 0:
+            if s.extended is None:
+                s.extended = {}
+            s.extended["tags"] = tags_out

@@ -47,6 +47,19 @@ class AttributesUtil(object):
             return True
         return False
 
+    def _try_add_identifier_list(self, o, name, id_list):
+        tags_str_list = []
+        if id_list is not None and len(id_list) > 0:
+            for x in id_list:
+                if hasattr(x, "data"):
+                    x = x.data
+                if not self._ident_util.IsIdentifierAny(x):
+                    tags_str_list.append(self._ident_util.IdentifierToString(x))
+            if len(tags_str_list) > 0:
+                o[name] = RR.VarValue(",".join(tags_str_list), "string")
+            return True
+        return False
+
     def GetDefaultServiceAttributesFromDeviceInfo(self, device_info):
         """
         Get the default service attributes from a DeviceInfo structure. These attributes are
@@ -64,4 +77,6 @@ class AttributesUtil(object):
         self._try_add_identifier(o, "model", device_info.model)
         self._try_add_string(o, "serial_number", device_info.serial_number)
         self._try_add_string(o, "user_description", device_info.user_description)
+        if device_info.extended is not None:
+            self._try_add_identifier_list(o, "tags", device_info.extended.get("tags"))
         return o
