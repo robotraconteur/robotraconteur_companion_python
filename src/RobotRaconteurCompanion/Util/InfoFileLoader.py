@@ -73,6 +73,25 @@ class InfoFileLoader(object):
         _, _, fds = self._load_device_identifier(info, category)
         return info, fds
 
+    def LoadInfoFileFromDict(self, info_dict, info_type_name, category="unspecified"):
+        """
+        Load a device info Yaml structure from a dictionary and assign a device identifier
+
+        In most cases the category should be set to "device".
+
+        :param info_dict: The dictionary containing the info parsed from a Yaml file
+        :type info_dict: dict
+        :param info_type_name: The type name of the info Yaml structure
+        :type info_type_name: str
+        :param category: (optional) The category of the device identifier. Defaults to "unspecified".
+        :type category: str
+        :return: The loaded info Yaml structure and the device identifier lock file descriptor
+        :rtype: tuple
+        """
+        info = self._info_parser.ParseInfoDict(info_dict, info_type_name)
+        _, _, fds = self._load_device_identifier(info, category)
+        return info, fds
+
     def LoadInfoFile(self, file_name, info_type_name, category="unspecified"):
         """
         Load a device info Yaml structure from a file and assign a device identifier

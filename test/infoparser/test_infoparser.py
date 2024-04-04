@@ -3,6 +3,7 @@ from RobotRaconteurCompanion import InfoParser
 import RobotRaconteurCompanion as RRC
 import importlib_resources
 from RobotRaconteur.RobotRaconteurPythonUtil import PackMessageElement, UnpackMessageElement
+import io
 
 
 def test_infoparser():
@@ -17,5 +18,21 @@ def test_infoparser():
         rr_robot_info.UpdateData()
         UnpackMessageElement(rr_robot_info, node=node)
         print(robot_info)
+    finally:
+        node.Shutdown()
+
+
+def test_infoparser_f():
+    node = RR.RobotRaconteurNode()
+    node.Init()
+    try:
+        RRC.RegisterStdRobDefServiceTypes(node)
+        with (importlib_resources.files(__package__) / ('sawyer_robot_default_config.yml')).open() as info_f:
+            parser = InfoParser(node)
+            robot_info = parser.ParseInfoFile(info_f, "com.robotraconteur.robotics.robot.RobotInfo")
+            rr_robot_info = PackMessageElement(robot_info, f"com.robotraconteur.robotics.robot.RobotInfo", node=node)
+            rr_robot_info.UpdateData()
+            UnpackMessageElement(rr_robot_info, node=node)
+            print(robot_info)
     finally:
         node.Shutdown()
