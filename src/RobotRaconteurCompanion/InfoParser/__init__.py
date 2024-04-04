@@ -4,6 +4,7 @@ from RobotRaconteur.RobotRaconteurPythonUtil import SplitQualifiedName
 import traceback
 import numpy as np
 import uuid
+from pathlib import Path
 
 
 def _find_by_name(v, name):
@@ -237,11 +238,13 @@ class InfoParser(object):
         """
 
         struct_type = self._find_structure(type_name)
-
-        with open(filename, 'r') as f:
-            file_text = f.read()
-
-        return self.ParseInfoString(file_text, type_name)
+        if isinstance(filename, str) or isinstance(filename, Path):
+            with open(filename, 'r') as f:
+                file_text = f.read()
+        else:
+            file_text = filename.read()
+        info_dict = yaml.safe_load(file_text)
+        return self.ParseInfoDict(info_dict, type_name)
 
     def ParseInfoString(self, info_string, type_name):
         """
@@ -255,16 +258,31 @@ class InfoParser(object):
             ``com.robotraconteur.robotics.robot.DeviceInfo`` and ``com.robotraconteur.robotics.robot.RobotInfo``
         :type type_name: str
         :return: The parsed structure
+        """
+        struct_type = self._find_structure(type_name)
 
+        info_dict = yaml.safe_load(info_string)
+        return self.ParseInfoDict(info_dict, type_name)
+
+    def ParseInfoDict(self, info_dict, type_name):
+        """
+        Use a parsed YAML string containing contents of a device info structure. The type_name
+        must be the fully qualified name of the structure type. The structure type must be defined
+        in a service definition loaded into the node, or pulled by a client object.
+
+        :param info_dict: The dictionary containing the parsed YAML structure
+        :type info_dict: dict
+        :param type_name: The fully qualified name of the structure type. Examples include
+            ``com.robotraconteur.robotics.robot.DeviceInfo`` and ``com.robotraconteur.robotics.robot.RobotInfo``
+        :type type_name: str
+        :return: The parsed structure
         """
 
         struct_type, struct_def = self._find_structure(type_name)
         if struct_type is None:
             raise RR.InvalidArgumentException("Invalid structure type specified")
 
-        d = yaml.safe_load(info_string)
-
-        ret = self._parse_structure(d, struct_type, struct_def)
+        ret = self._parse_structure(info_dict, struct_type, struct_def)
         return ret
 
     # Overrides for standard types
