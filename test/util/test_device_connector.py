@@ -134,6 +134,8 @@ def test_device_connector2():
 
         con.RemoveDevice("robot1")
 
+        con.Close()
+
 
 def _assert_connected_device_count(dev, count):
     if count == 0:
