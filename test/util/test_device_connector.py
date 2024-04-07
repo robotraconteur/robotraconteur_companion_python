@@ -13,6 +13,8 @@ import yaml
 import time
 import pytest
 
+import io
+
 
 class _RobotStub:
     def __init__(self, robot_info):
@@ -193,3 +195,43 @@ def test_device_connector3():
         _assert_service_name(test_fixture.client_node, con.GetDevice("robot5"), "robot3")
         _assert_service_name(test_fixture.client_node, con.GetDevice("robot7"), "robot4")
         _assert_service_name(test_fixture.client_node, con.GetDevice("robot8"), "robot4")
+
+
+def test_device_connector_yaml():
+    yaml = \
+        """
+    devices:
+      robot1:
+        device: robot1
+      robot2:
+        device:
+          name: robot2
+      robot3:
+        urls:
+        - rr+intra:///?nodename=server_node&service=robot1
+      robot4:
+        device: robot3_another_robot
+        tags:
+        - my_tag1
+      robot5:
+        device:
+          name: robot3_another_robot
+        tags:
+        - my_tag2
+      robot6:
+        device:
+          name: robot3_another_robot
+        tags:
+        - name: my_tag5
+          uuid: 25f9682d-932e-44cd-89a5-13d724c2583a
+    """
+    with _DevConnectorTestFixture() as test_fixture:
+        f = io.StringIO(yaml)
+        con = DeviceConnector(devices_yaml_f=f, node=test_fixture.client_node)
+
+        _assert_connected_device_count(con.GetDevice("robot1"), 1)
+        _assert_connected_device_count(con.GetDevice("robot2"), 1)
+        _assert_connected_device_count(con.GetDevice("robot3"), 1)
+        _assert_connected_device_count(con.GetDevice("robot4"), 1)
+        _assert_connected_device_count(con.GetDevice("robot5"), 1)
+        _assert_connected_device_count(con.GetDevice("robot6"), 1)

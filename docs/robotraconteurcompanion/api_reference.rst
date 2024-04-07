@@ -18,3 +18,4 @@ API Reference
    api/robust_function_caller
    api/sensordata_util
    api/uuid_util
+   api/device_connector
