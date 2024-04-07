@@ -21,6 +21,36 @@ class DeviceConnectorDetails:
     Different combinations of fields are valid depending on the connection method used. See the DeviceConnector
     documentation for more information on how to use the DeviceConnectorDetails class.
 
+    :ivar device_nickname: The nickname of the device
+    :vartype device_nickname: str
+    :ivar device: The device identifier (name, uuid) of the device. This can be either a string, a dictionary with
+                    "name" and "uuid" keys, or a com.robotraconteur.identifier.Identifier structure
+    :vartype device: str | dict | com.robotraconteur.identifier.Identifier
+    :ivar serial_number: The serial number of the device
+    :vartype serial_number: str
+    :ivar tags: The tags of the device. This a list of strings, a list of a dictionaries with "name" and "uuid" keys,
+                    or a list com.robotraconteur.identifier.Identifier structure in any combination
+    :vartype tags: list[str | dict | com.robotraconteur.identifier.Identifier]
+    :ivar tag_match_operation: The operation to use when matching tags. Can be "and", "or", "nand", or "nor"
+    :vartype tag_match_operation: str
+    :ivar service_nodes: A list of RobotRaconteur.SubscriptionFilterNode to use for service discovery. This is intended
+                            for advanced users needing to provide authentication or other advanced options.
+    :vartype service_nodes: list[RobotRaconteur.SubscriptionFilterNode]
+    :ivar transport_schemes: A list of transport schemes to use for service discovery. This is intended for advanced
+                                users needing to provide authentication or other advanced options.
+    :vartype transport_schemes: list[str]
+    :ivar urls: A list of URLs to use for direct connection to the device
+    :vartype urls: str | list[str]
+    :ivar url_auth: The username and password to use for authentication when connecting using URLs
+    :vartype url_auth: RobotRaconteur.SubscriptionFilterNode
+    :ivar root_object_type: The root object type to use for service discovery. This is a list of strings
+    :vartype root_object_type: str | list[str]
+    :ivar subscription_filter: The subscription filter to use for service discovery.
+    :vartype subscription_filter: RobotRaconteur.ServiceSubscriptionFilter
+    :ivar max_connections: The maximum number of connections to the device. Defaults to 10. Should be set to 1 for
+                            connecting to a single device
+    :vartype max_connections: int
+
     :param device_nickname: The nickname of the device
     :type device_nickname: str
     :param device: The device identifier (name, uuid) of the device. This can be either a string, a dictionary with
@@ -140,31 +170,31 @@ class DeviceConnector:
 
     The YAML file should match the following example format:
 
-    ```
-    devices:
-        device1:
-            # Connect to device using URLs
-            urls: rr+intra:///?nodename=server_node&service=robot1
-        device2:
-            # Connect to device using device identifier, serial number, and tags
-            device: robot2
-            serial_number: "1234"
-            tags:
-            - tag1
-            - tag2
-        device3:
-            # Connect to device using device identifier and tags
-            device:
-                name: robot3
-                uuid: "b92fda92-c74e-4fd1-8174-0163b4dc182a"
-            tags:
-            - name: tag1
-              uuid: "a9d4e339-f248-49c7-9443-e2f3ebba9c02"
-            - tag2
-        device4:
-            # Match any tags or serial number
-            device: robot3
-    ```
+    ..  code-block:: yaml
+
+        devices:
+            device1:
+                # Connect to device using URLs
+                urls: rr+intra:///?nodename=server_node&service=robot1
+            device2:
+                # Connect to device using device identifier, serial number, and tags
+                device: robot2
+                serial_number: "1234"
+                tags:
+                - tag1
+                - tag2
+            device3:
+                # Connect to device using device identifier and tags
+                device:
+                    name: robot3
+                    uuid: "b92fda92-c74e-4fd1-8174-0163b4dc182a"
+                tags:
+                - name: tag1
+                uuid: "a9d4e339-f248-49c7-9443-e2f3ebba9c02"
+                - tag2
+            device4:
+                # Match any tags or serial number
+                device: robot3
 
     Use io.StringIO to load the YAML from a string.
 
