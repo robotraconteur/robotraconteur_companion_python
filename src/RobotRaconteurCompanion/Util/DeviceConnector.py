@@ -86,18 +86,18 @@ class DeviceConnectorDetails:
                  service_nodes=None,
                  transport_schemes=None, urls=None, url_auth=None, root_object_type=None, subscription_filter=None,
                  max_connections=10):
-        if not any([device, serial_number, urls, root_object_type]):
+        if not any([device is not None, serial_number is not None, urls is not None, root_object_type is not None]):
             raise RR.InvalidArgumentException(
                 "At least one of device, serial_number, urls, or root_object_type must be specified")
 
-        if (any([device, serial_number, tags]) and any([urls, url_auth, subscription_filter])):
+        if (any([device is not None, serial_number is not None, tags is not None]) and any([urls is not None, url_auth is not None, subscription_filter is not None])):
             raise RR.InvalidArgumentException(
                 "If device, serial_number, or tags are specified, urls and subscription_filter must not be specified")
 
-        if (urls and any([subscription_filter, service_nodes, transport_schemes])):
+        if (urls is not None and any([subscription_filter is not None, service_nodes is not None, transport_schemes is not None])):
             raise RR.InvalidArgumentException(
                 "If urls are specified, service_nodes, transport_schemes, and subscription_filter must not be specified")
-        if (subscription_filter and any([device, serial_number, tags, service_nodes, transport_schemes])):
+        if (subscription_filter is not None and any([device is not None, serial_number is not None, tags is not None, service_nodes is not None, transport_schemes is not None])):
             raise RR.InvalidArgumentException(
                 "If subscription_filter is specified, device, serial_number, tags, service_nodes, and transport_schemes must not be specified")
 
