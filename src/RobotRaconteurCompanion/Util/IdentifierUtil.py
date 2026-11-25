@@ -178,7 +178,7 @@ class IdentifierUtil(object):
         identifier_regex = "(?:(" + name_regex_str + ")\\|(" + uuid_regex_str + "))|(" + \
             name_regex_str + ")|(" + uuid_regex_str + ")"
 
-        r_res = re.match(identifier_regex, string_id)
+        r_res = re.fullmatch(identifier_regex, string_id)
         if r_res is None:
             raise RR.InvalidArgumentException("Invalid identifier string")
 

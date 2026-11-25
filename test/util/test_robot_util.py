@@ -87,3 +87,51 @@ def test_infoparser2():
 
     finally:
         node.Shutdown()
+
+
+def test_robot_util_joint_numbers_offset():
+    # Regression: robot_info_to_rox_robot indexed robot_info.joint_info[i] (chain-local i)
+    # instead of robot_info.joint_info[chain.joint_numbers[i]] (global joint index). This only
+    # matters when joint_numbers[i] != i (multi-chain robots, or offset numbering). Reproduce by
+    # prepending a decoy joint to the global joint_info and offsetting joint_numbers by 1, so the
+    # chain still refers to the original sawyer joints and must produce the original sawyer values.
+    node = RR.RobotRaconteurNode()
+    node.Init()
+    try:
+        RRC.RegisterStdRobDefServiceTypes(node)
+        info_f = importlib_resources.files(__package__) / ".." / "infoparser" / 'sawyer_robot_default_config.yml'
+        parser = InfoParser(node)
+        robot_info = parser.ParseInfoFile(info_f, "com.robotraconteur.robotics.robot.RobotInfo")
+
+        joint_info_type = node.GetStructureType("com.robotraconteur.robotics.joints.JointInfo")
+        joint_limits_type = node.GetStructureType("com.robotraconteur.robotics.joints.JointLimits")
+        ident_type = node.GetStructureType("com.robotraconteur.identifier.Identifier")
+
+        decoy = joint_info_type()
+        decoy.joint_type = 1  # revolute
+        dl = joint_limits_type()
+        dl.lower = -99.0
+        dl.upper = 99.0
+        dl.velocity = 99.0
+        dl.acceleration = 99.0
+        decoy.joint_limits = dl
+        decoy_ident = ident_type()
+        decoy_ident.name = "decoy_joint"
+        decoy.joint_identifier = decoy_ident
+
+        robot_info.joint_info = [decoy] + list(robot_info.joint_info)
+        chain = robot_info.chains[0]
+        chain.joint_numbers = np.array([n + 1 for n in chain.joint_numbers], dtype=np.uint32)
+
+        robot_util = RobotUtil(node)
+        robot = robot_util.robot_info_to_rox_robot(robot_info, 0)
+
+        # Must still read the original sawyer joints, not the decoy at index 0.
+        assert robot.joint_names == [
+            'right_j0', 'right_j1', 'right_j2', 'right_j3', 'right_j4', 'right_j5', 'right_j6']
+        nptest.assert_allclose(robot.joint_lower_limit,
+                               [-3.0503, -3.8095, -3.0426, -3.0439, -2.9761, -2.9761, -4.7124])
+        nptest.assert_allclose(robot.joint_upper_limit, [
+            3.0503, 2.2736, 3.0426, 3.0439, 2.9761, 2.9761, 4.7124])
+    finally:
+        node.Shutdown()

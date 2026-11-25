@@ -81,7 +81,7 @@ class RobotUtil:
         joint_names = [None] * joint_count
 
         for i in range(joint_count):
-            j = robot_info.joint_info[i]
+            j = robot_info.joint_info[chain.joint_numbers[i]]
             if j.joint_type == 1:
                 # Revolute joint
                 joint_type[i] = 0

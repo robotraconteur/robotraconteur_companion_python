@@ -307,7 +307,7 @@ class DeviceConnector:
         :rtype: (bool, RobotRaconteur.ServiceSubscription)
         """
         try:
-            return True, self.get_device(device_nickname)
+            return True, self.GetDevice(device_nickname)
         except:
             return False, None
 
@@ -386,7 +386,7 @@ def _device_details_to_subscription_filter(node, device_details):
         if device_details.urls is not None:
             raise RR.InvalidArgumentException("Device details to filter must not contain urls")
         if device_details.subscription_filter is not None:
-            raise RR.InvalidArgumentException("Device details to filter must contain subscription filter")
+            raise RR.InvalidArgumentException("Device details to filter must not contain subscription filter")
 
         sub_filter = RR.ServiceSubscriptionFilter()
 

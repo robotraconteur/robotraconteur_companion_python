@@ -118,6 +118,27 @@ def test_device_connector():
             dev1.GetDefaultClientWait(0.1)
 
 
+def test_device_connector_try_get_device():
+    with _DevConnectorTestFixture() as test_fixture:
+        con = DeviceConnector(node=test_fixture.client_node)
+
+        con.AddDevice(DeviceConnectorDetails(device_nickname="robot1", device="robot1"))
+
+        # Regression: TryGetDevice previously called a non-existent self.get_device,
+        # so it always returned (False, None).
+        found, dev1 = con.TryGetDevice("robot1")
+        assert found is True
+        assert dev1 is not None
+        c1 = dev1.GetDefaultClientWait(5)
+        assert c1.device_info.device.name == "robot1"
+
+        found2, dev2 = con.TryGetDevice("nonexistent_device")
+        assert found2 is False
+        assert dev2 is None
+
+        con.Close()
+
+
 def test_device_connector2():
     with _DevConnectorTestFixture() as test_fixture:
         con = DeviceConnector(node=test_fixture.client_node)
